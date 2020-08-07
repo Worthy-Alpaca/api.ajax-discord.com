@@ -6,8 +6,8 @@ var bodyParser = require("body-parser");
 const exjwt = require('express-jwt');
 
 //.env Import
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
+
 
 //Import Routes
 const authRoute = require('./routes/auth');
