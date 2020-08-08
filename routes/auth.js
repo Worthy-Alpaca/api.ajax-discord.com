@@ -3,12 +3,13 @@ const con = require('../database/index');
 //import validation features
 const { registerValidation, loginValidation } = require('../validation');
 const jwt = require('jsonwebtoken');
+const verify = require('./verifyRegister');
 //import encryption
 const bcrypt = require('bcryptjs');
 
 //add new user to database
-router.post('/register', async (req, res) => {
-
+router.post('/register', verify, async (req, res) => {
+    console.log("so far so good")
     //validating request body
     const { error } = registerValidation(req.body);
     if (error) {
@@ -38,7 +39,7 @@ router.post('/register', async (req, res) => {
 
 //login
 router.post('/login', (req, res) => {
-    console.log(req.body)
+    //console.log(req.body)
     //validating request body
     const { error } = loginValidation(req.body);
     if (error) {
@@ -56,14 +57,24 @@ router.post('/login', (req, res) => {
                 token: null,
                 err: 'More then one user detected. Please contact a server admin!'
             });
+        } else if (results.length < 1) {
+            return res.status(401).json({
+                sucess: false,
+                token: null,
+                err: 'Entered Username incorrect!'
+            });
         } else {
-            //check if password is correct
-            const validPass = await bcrypt.compare(req.body.password, results[0].password);
-            if (!validPass) return res.status(400).send('Invalid Password')
-
             //Create and assign token
             const token = jwt.sign({ _id: username }, process.env.TOKEN_SECRET);
-            /* res.header('auth-token', token) */
+            //check if password is correct
+            const validPass = await bcrypt.compare(req.body.password, results[0].password);
+            if (!validPass) {
+                return res.status(401).json({
+                    sucess: false,
+                    token: null,
+                    err: 'Entered Password incorrect!'
+                });
+            }
             res.json({
                 sucess: true,
                 err: null,
