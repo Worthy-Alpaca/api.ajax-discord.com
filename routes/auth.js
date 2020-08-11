@@ -26,7 +26,12 @@ router.post('/register', verify, async (req, res) => {
     
     con.query('SELECT * FROM login WHERE server_id = ?', [username], function (error, results, fields) {
         if (results.length > 0) {
-            res.send('This user already exists')
+        /* res.send('This user already exists') */
+            res.status(907).json({
+                sucess: false,
+                token: null,
+                err: 'This user already exists'
+            });
         } else {
             sql = `INSERT INTO login (server_id, password) VALUES ('${username}', '${hashedPassword}')`
             con.query(sql);
