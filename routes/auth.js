@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs');
 
 //add new user to database
 router.post('/register', verify, async (req, res) => {
-    console.log("so far so good")
+    //console.log("so far so good")
     //validating request body
     const { error } = registerValidation(req.body);
     if (error) {
