@@ -14,6 +14,7 @@ require('dotenv').config({ path: __dirname + '/.env' });
 const authRoute = require('./routes/auth');
 const dashboardRoute = require('./routes/dashboard');
 const verifyRoute = require('./routes/verify');
+const showserver = require('./routes/discord');
 
 //Import database connection
 const con = require('./database/index');
@@ -50,5 +51,6 @@ app.get('/', jwtMW, (req, res) => {
 app.use('/user', authRoute);
 app.use('/dashboard', dashboardRoute);
 app.use('/verify', verifyRoute);
+app.use('/discord', showserver);
 
 app.listen(5000, () => console.log('Server running on port 5000'));
