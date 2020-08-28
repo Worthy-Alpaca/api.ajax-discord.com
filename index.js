@@ -38,7 +38,8 @@ app.use((req, res, next) => {
 
 //express jsonwebtoken middleware
 const jwtMW = exjwt({
-    secret: process.env.TOKEN_SECRET
+    secret: process.env.TOKEN_SECRET,
+    algorithms: ['RS256']
 });
 
 //using express jsonwebtoke
