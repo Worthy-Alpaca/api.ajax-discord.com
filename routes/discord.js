@@ -1,39 +1,27 @@
 const router = require('express').Router();
 const con = require('../database/index');
-//import validation features
-const { registerValidation, loginValidation } = require('../validation');
+//Import verify module
 const verify = require('./verifyRegister');
 //import encryption
 const bcrypt = require('bcryptjs');
+//import DB queries
+const { getcurrentserver, getchannels } = require('../database/queries.js');
 
 //add new user to database
 router.post('/showserver', verify, async (req, res) => {
     //console.log(req)
     //get components
     const server_id = req.body.server_id;
+    const currentserver = await getcurrentserver(server_id, con);
 
-    con.query('SELECT * FROM servers WHERE id = ?', [server_id], function (error, results, fields) {
-        
-        if (results.length = 1) {
-            //console.log(results[0])
-            res.json(results[0])
-        } else {
-            res.json({
-                error: 'No user found'
-            })
-        }
-        res.end();
-    });
+    res.json(currentserver);
 });
 
 router.post('/showchannels', verify, async (req, res) => {
     const server_id = req.body.server_id;
 
-    con.query('SELECT * FROM channels WHERE server_id = ?', [server_id], function (error, results, fields) {
-
-        res.json(results);
-        res.end();
-    });
+    const allchannels = await getchannels(server_id, con);
+    res.json(allchannels);
 })
 
 module.exports = router;
