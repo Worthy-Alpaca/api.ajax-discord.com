@@ -16,6 +16,7 @@ const dashboardRoute = require('./routes/dashboard');
 const verifyRoute = require('./routes/verify');
 const showserver = require('./routes/discord/discord');
 const channels = require('./routes/discord/channels');
+const roles = require('./routes/discord/roles');
 
 //Import database connection
 const con = require('./database/index');
@@ -55,5 +56,6 @@ app.use('/dashboard', dashboardRoute);
 app.use('/verify', verifyRoute);
 app.use('/discord', showserver);
 app.use('/discord/channel', channels);
+app.use('/discord/role', roles)
 
 app.listen(5000, () => console.log('Server running on port 5000'));

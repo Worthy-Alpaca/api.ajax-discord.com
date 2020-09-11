@@ -85,4 +85,68 @@ module.exports = {
             });
         })
     },
+
+    addrole: function (role, guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM roles WHERE server_id = '${guild.id}' AND role_id = '${role.id}'`, (err, rows) => {
+                if (err) throw err;
+                let sql;
+
+                if (!rows.length) {                    
+                    sql = `INSERT INTO roles (server_id, role_id, role_name) VALUES ('${guild.id}', "${role.id}", "${role.name}")`
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(false);
+                    }
+                }
+
+            });
+        })
+    },
+
+    delrole: function (role, guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM roles WHERE role_name = '${role.name}' AND role_id = '${role.id}'`, (err, rows) => {
+                if (rows.length === 1) {
+                    let sql = `DELETE FROM roles WHERE role_name = '${role.name}' AND role_id = '${role.id}'`
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(false);
+                    }
+                } else {
+                    return resolve(false);
+                }
+            });
+        })
+    },
+
+    updaterole: function (newRole, guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM roles WHERE server_id = '${guild.id}' AND role_id = '${newRole.id}'`, (err, rows) => {
+                if (err) throw err;
+                let sql;
+
+                if (rows.length === 1) {
+                    if (rows[0].role_name !== newRole.name) {
+                        sql = `UPDATE roles SET role_name = '${newRole.name}' WHERE role_id = '${newRole.id}'`
+                        try {
+                            con.query(sql);
+                            return resolve(true);
+                        } catch (error) {
+                            return resolve(false);
+                        }
+                    } else {
+                        return resolve('Name not changed');
+                    }
+                } else {
+                    return;
+                }
+
+            })
+        })
+    },
 }
