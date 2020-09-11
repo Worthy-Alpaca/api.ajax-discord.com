@@ -2,7 +2,7 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { getcurrentserver, getchannels } = require('../../database/queries.js');
+const { getcurrentserver, getchannels, deleteServer1, deleteServer2 } = require('../../database/queries.js');
 
 //add new user to database
 router.post('/showserver', verify, async (req, res) => {
@@ -32,5 +32,25 @@ router.get('/getserver', verify, async (req, res) => {
     res.json(currentserver);
     res.end();
 });
+
+router.delete('/deleteserver', verify, async (req, res) => {
+    const guild = req.body.guild;
+    
+    const green1 = await deleteServer1(guild);
+    const green2 = await deleteServer2(guild);
+
+    if (green1 && green2) {
+        res.status(200).json({
+            success: true,
+            err: null
+        });
+    } else {
+        res.status(409).json({
+            success: false,
+            err: "Couldn't delete from Database"
+        });
+    }
+    res.end();
+})
 
 module.exports = router;

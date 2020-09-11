@@ -11,13 +11,13 @@ router.post('/create', verify, async (req, res) => {
     const success = await addrole(role, guild);
 
     if (success) {
-        console.log("adding success")
+        console.log("role adding success")
         res.status(200).json({
             sucess: true,
             err: null
         });
     } else {
-        console.log("error");
+        console.log("role adding error");
         res.status(409).json({
             sucess: false,
             err: success
@@ -33,13 +33,13 @@ router.delete('/delete', verify, async (req, res) => {
     const success = await delrole(role, guild);
 
     if (success) {
-        console.log("delete success")
+        console.log("role delete success")
         res.status(200).json({
             sucess: true,
             err: null
         });
     } else {
-        console.log("error");
+        console.log("role delete error");
         res.status(409).json({
             sucess: false,
             err: success
@@ -55,13 +55,13 @@ router.put('/update', verify, async (req, res) => {
     const success = await updaterole(role, guild);
     console.log(success);
     if (success === true) {
-        console.log("update success")
+        console.log("role update success")
         res.status(200).json({
             sucess: true,
             err: null
         });
     } else if (success === 'Name not changed') {
-        console.log("error");
+        console.log("role update error");
         res.status(409).json({
             sucess: false,
             err: success

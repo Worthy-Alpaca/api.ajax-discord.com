@@ -6,10 +6,12 @@ const jwt = require('jsonwebtoken');
 const verify = require('./verifyRegister');
 //import encryption
 const bcrypt = require('bcryptjs');
+//import DB query
+const { newServer } = require('../database/queries');
 
 //add new user to database
 router.post('/register', verify, async (req, res) => {
-    //console.log("so far so good")
+    //console.log(req.body)
     //validating request body
     const { error } = registerValidation(req.body);
     if (error) {
@@ -23,22 +25,32 @@ router.post('/register', verify, async (req, res) => {
 
     //get components
     const username = req.body.username;
-    
-    con.query('SELECT * FROM login WHERE server_id = ?', [username], function (error, results, fields) {
-        if (results.length > 0) {
-        /* res.send('This user already exists') */
-            res.status(907).json({
-                sucess: false,
-                token: null,
-                err: 'This user already exists'
-            });
-        } else {
-            sql = `INSERT INTO login (server_id, password) VALUES ('${username}', '${hashedPassword}')`
-            con.query(sql);
-            res.sendStatus(200);
-        }
+    const sucess = await newServer(req.body.guild);
+    //console.log(req.body.guild)
+    if (sucess) {
+        con.query('SELECT * FROM login WHERE server_id = ?', [username], function (error, results, fields) {
+            if (results.length > 0) {
+                /* res.send('This user already exists') */
+                res.status(907).json({
+                    sucess: false,
+                    token: null,
+                    err: 'This user already exists'
+                });
+            } else {
+                sql = `INSERT INTO login (server_id, password) VALUES ('${username}', '${hashedPassword}')`
+                con.query(sql);
+                res.sendStatus(200);
+            }
+            res.end();
+        });
+    } else {
+        res.status(907).json({
+            sucess: false,
+            token: null,
+            err: 'This user already exists'
+        });
         res.end();
-    });
+    }
 });
 
 

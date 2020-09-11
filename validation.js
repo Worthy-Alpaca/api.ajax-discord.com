@@ -9,7 +9,11 @@ const registerValidation = (data) => {
             .required(),
         password: Joi.string()
             .min(6)
-            .required()
+            .required(),
+        guild: Joi.object().keys({
+            name: Joi.string().required(),
+            id: Joi.string().required()
+        })
     })
 
     return schema.validate(data);

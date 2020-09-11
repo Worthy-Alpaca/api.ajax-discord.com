@@ -11,13 +11,13 @@ router.post('/create', verify, async (req, res) => {
     const success = await addchannel(channel, guild);
 
     if (success) {
-        console.log("adding success")
+        console.log("channel adding success")
         res.status(200).json({
             sucess: true,
             err: null
         });
     } else {
-        console.log("error");
+        console.log("channel create error");
         res.status(409).json({
             sucess: false,
             err: success
@@ -33,13 +33,13 @@ router.delete('/delete', verify, async (req, res) => {
     const success = await delchannel(channel, guild);
 
     if (success) {
-        console.log("delete success")
+        console.log("channel delete success")
         res.status(200).json({
             sucess: true,
             err: null
         });
     } else {
-        console.log("error");
+        console.log("channel delete error");
         res.status(409).json({
             sucess: false,
             err: success
@@ -55,13 +55,13 @@ router.put('/update', verify, async (req, res) => {
     const success = await updatechannel(channel, guild);
 
     if (success) {
-        console.log("update success")
+        console.log("channel update success")
         res.status(200).json({
             sucess: true,
             err: null
         });
     } else {
-        console.log("error");
+        console.log("channel update error");
         res.status(409).json({
             sucess: false,
             err: success

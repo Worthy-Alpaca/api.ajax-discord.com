@@ -149,4 +149,57 @@ module.exports = {
             })
         })
     },
+
+    newServer: function (guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM servers WHERE id = '${guild.id}'`, (err, rows) => {
+                if (err) throw err;
+                let sql;
+
+                if (!rows.length) {
+                    console.log(guild.name, "added")
+                    sql = `INSERT INTO servers (id, name) VALUES ('${guild.id}', "${guild.name}")`
+                    
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(false);
+                    }
+                } else {
+                    return resolve(false)
+                }
+
+            });
+        })
+    },
+
+    deleteServer1: function (guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM servers WHERE id = '${guild.id}'`, (err, rows) => {
+
+                let sql = `DELETE FROM servers WHERE id = '${guild.id}'`
+                try {
+                    con.query(sql);
+                    return resolve(true);
+                } catch (error) {
+                    return resolve(false);
+                }
+            })
+        })
+    },
+
+    deleteServer2: function (guild) {
+        return new Promise(function (resolve, reject) {            
+            con.query(`SELECT * FROM login WHERE server_id = '${guild.id}'`, (err, rows) => {
+                let sql = `DELETE FROM login WHERE server_id = '${guild.id}'`
+                try {
+                    con.query(sql);
+                    return resolve(true);
+                } catch (error) {
+                    return resolve(false);
+                }
+            })
+        })
+    }
 }
