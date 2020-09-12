@@ -1,3 +1,4 @@
+const { response } = require('express');
 const con = require('./index');
 
 module.exports = {
@@ -365,6 +366,88 @@ module.exports = {
                     resolve(true);
                 }
             })
+        })
+    },
+
+    getinfractions: function (server, rMember) {
+        con.query(`CREATE TABLE IF NOT EXISTS ${server}(member_id VARCHAR(20) NOT NULL UNIQUE, member_name TEXT NOT NULL, infractions INT NOT NULL);`)
+        var infractions;
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember}'`, (err, rows) => {
+                if (err) throw err;
+                if (rows.length < 1) {
+                    infractions = 0;
+                    resolve(infractions);
+                } else if (rows[0].member_id === rMember) {
+                    infractions = rows[0].infractions;
+                    resolve(infractions);
+                }
+
+            })
+        })
+    },
+
+    deleteinfractions: function (server, rMember) {
+        
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember}'`, (err, rows) => {
+                if (err) throw err;
+                if (rows.length) {
+                    let sql = `DELETE FROM ${server} WHERE member_id = '${rMember}'`
+
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(error);
+                    }
+                } else {
+                    return resolve(false);
+                }
+            });
+        })
+    },
+
+    createinfractions: function (server, rMember) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember.userID}'`, (err, rows) => {
+                if (err) throw err;
+                let sql;
+                if (rows.length < 1) {
+                    sql = `INSERT INTO ${server} (member_id, member_name, infractions) VALUES ('${rMember.userID}', '${rMember.displayName}', 1)`
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(error);
+                    }
+                } else {
+                    return resolve(false);
+                }                
+                
+            });
+        })
+    },
+
+    updateinfractions: function (server, rMember) {
+
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember.userID}'`, (err, rows) => {
+                if (err) throw err;
+                let sql;
+                if (rows[0].member_id === rMember.userID) {
+                    var infraction = rows[0].infractions + 1;
+                    sql = `UPDATE ${server} SET infractions = ${infraction} WHERE member_id = '${rMember.userID}'`
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(error);
+                    }
+                } else {
+                    return resolve(false);
+                }               
+            });
         })
     },
 }
