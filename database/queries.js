@@ -201,5 +201,40 @@ module.exports = {
                 }
             })
         })
-    }
+    },
+
+    setServer: function (guild, field, value) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM servers WHERE id = '${guild.id}'`, (err, rows) => {
+                let sql;
+                sql = `UPDATE servers SET ${field} = '${value}' WHERE id = '${guild.id}'`;
+                adm = true;
+                try {
+                    con.query(sql);
+                    return resolve(true);
+                } catch (error) {
+                    return resolve(error);
+                }
+            })
+        })
+    },
+
+    addreddit: function (guild, reddit) {
+        var sql;
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM reddits WHERE server_id = '${guild.id}' AND reddit = '${reddit}'`, (err, rows) => {
+                if (rows.length < 1) {
+                    sql = `INSERT INTO reddits (server_id, reddit) VALUES ('${guild.id}', '${reddit}')`
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(error);
+                    }
+                } else {
+                    return resolve(false);
+                }
+            })
+        })
+    },
 }
