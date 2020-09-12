@@ -24,7 +24,7 @@ router.post('/showchannels', verify, async (req, res) => {
 });
 
 router.get('/getserver', verify, async (req, res) => {
-    //console.log(req)
+    console.log(req)
     //get components
     const server_id = req.headers.server_id;
     const currentserver = await getcurrentserver(server_id);
