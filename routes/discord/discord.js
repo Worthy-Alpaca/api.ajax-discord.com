@@ -2,7 +2,7 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { getcurrentserver, getchannels, deleteServer1, deleteServer2, setServer } = require('../../database/queries.js');
+const { getcurrentserver, getchannels, deleteServer1, deleteServer2, setServer, getservers, getserverchannel } = require('../../database/queries.js');
 
 //add new user to database
 router.post('/showserver', verify, async (req, res) => {
@@ -81,6 +81,33 @@ router.get('/check', verify, async (req, res) => {
         success: true,
         err: null
     });
+    res.end();
+})
+
+router.get('/announcements', verify, async (req, res) => {
+    if (req.headers.type === 'announcements/getserver') {
+        var success = await getservers();
+    } else if (req.headers.type === 'announcements/getchannel') {
+        var success = await getserverchannel(req.headers.payload);
+    }
+
+    if (success || typeof success == 'number') {
+        console.log("general get success")
+        res.status(200).json(success);
+    } else if (success === false) {
+        res.status(200).json({
+            status: 200,
+            success: false,
+            err: 'no data'
+        });
+    } else {
+        console.log("general get error");
+        res.status(409).json({
+            status: 409,
+            success: false,
+            err: success
+        });
+    }
     res.end();
 })
 

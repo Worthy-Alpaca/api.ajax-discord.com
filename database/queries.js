@@ -450,4 +450,43 @@ module.exports = {
             });
         })
     },
+
+    getservers: function () {
+        var servers = []
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM servers`, (err, rows) => {
+                if (rows.length < 1) {
+                    name = "I'm not deployed on any servers :frowning2:"
+                    ranks.push(name)
+                    resolve(ranks)
+                } else {
+                    a = 0;
+                    while (a !== rows.length) {
+                        name = rows[a].id
+                        servers.push(name)
+                        a++;
+                    }
+
+                    resolve(servers);
+                }
+            })
+        })
+    }, 
+
+    getserverchannel: function (srv) {
+        var chnl;
+        return new Promise(function (resolve, reject) {
+            try {
+                con.query(`SELECT * FROM servers WHERE id = '${srv}'`, (err, rows) => {
+                    if (rows[0].reports === null) {
+                        return resolve(false);
+                    } else if (rows.length === 1) {
+                        return resolve(rows[0].reports);
+                    }
+                })
+            } catch (error) {
+                return resolve(error);
+            }
+        })
+    },
 }
