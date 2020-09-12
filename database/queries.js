@@ -275,4 +275,96 @@ module.exports = {
             })
         })
     },
+
+    addrank: function (guild, rank) {
+        let sql;
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM ranks WHERE server_id = '${guild.id}' AND rank_id = '${rank.id}'`, (err, rows) => {
+                if (rows.length < 1) {
+                    sql = `INSERT INTO ranks (rank_id, server_id, rank_name) VALUES ('${rank.id}','${guild.id}', '${rank.name}')`
+                    try {                        
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(error);
+                    }
+                } else {
+                    return resolve(false);
+                }
+            })
+        })
+    },
+
+    delrank: function (guild, rank) {
+        let sql;
+        var success;
+        if (typeof rank.id != 'undefined') {
+            return new Promise(function (resolve, reject) {
+                con.query(`SELECT * FROM ranks WHERE server_id = '${guild.id}' AND rank_id = '${rank.id}'`, (err, rows) => {
+                    if (rows.length < 1) {
+                        return resolve(false);
+                    } else {
+                        sql = `DELETE FROM ranks WHERE server_id = '${guild.id}' AND rank_id = '${rank.id}'`
+                        try {
+                            con.query(sql);
+                            return resolve(true);
+                        } catch (error) {
+                            return resolve(error);
+                        }
+                    }
+                })
+            })
+        } else {
+            return new Promise(function (resolve, reject) {
+                con.query(`SELECT * FROM ranks WHERE server_id = '${guild.id}' AND rank_name = '${rank}'`, (err, rows) => {
+                    if (rows.length < 1) {
+                        return resolve(false);
+                    } else {
+                        sql = `DELETE FROM ranks WHERE server_id = '${guild.id}' AND rank_name = '${rank}'`
+                        try {
+                            con.query(sql);
+                            return resolve(true);
+                        } catch (error) {
+                            return resolve(error);
+                        }
+                    }
+                })
+            })
+        }
+    },
+
+    getranks: function (id) {
+        var ranks = []
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM ranks WHERE server_id = '${id}'`, (err, rows) => {
+                if (rows.length < 1) {
+                    name = "No ranks on this server yet. Do you have suggestions for ranks? Contact the admin nearest to you."
+                    ranks.push(name)
+                    resolve(ranks);
+                } else {
+                    a = 0;
+                    while (a !== rows.length) {
+                        name = rows[a].rank_name
+                        ranks.push(name)
+                        a++;
+                    }
+
+                    resolve(ranks);
+                }
+            })
+        })
+    }, 
+
+    checkrank: function (id, rank_id) {
+        var r;
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM ranks WHERE server_id = '${id}' AND rank_id = '${rank_id}'`, (err, rows) => {
+                if (rows.length < 1) {
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            })
+        })
+    },
 }

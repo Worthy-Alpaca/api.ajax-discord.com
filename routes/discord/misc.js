@@ -2,11 +2,13 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { addreddit, delreddit, getreddits } = require('../../database/queries.js');
+const { addreddit, delreddit, getreddits, addrank, delrank, getranks, checkrank } = require('../../database/queries.js');
 
 router.post('/create', verify, async (req, res) => {
     if (req.headers.type === 'misc/reddit') {        
         var success = await addreddit(req.body.guild, req.body.value);
+    } else if (req.headers.type === 'misc/rank') {
+        var success = await addrank(req.body.guild, req.body.value);
     }
 
     if (success === true) {
@@ -37,6 +39,8 @@ router.delete('/delete', verify, async (req, res) => {
     
     if (req.headers.type === 'misc/reddit') {
         var success = await delreddit(req.body.guild, req.body.value);
+    } else if (req.headers.type === 'misc/rank') {
+        var success = await delrank(req.body.guild, req.body.value);
     }
 
     if (success === true) {
@@ -90,8 +94,14 @@ router.put('/update', verify, async (req, res) => {
 router.get('/get', verify, async (req, res) => {
 
     if (req.headers.type === 'misc/reddit') {
-        var success = await getreddits(req.headers.server_id)
+        var success = await getreddits(req.headers.server_id);
+    } else if (req.headers.type === 'misc/rank') {
+        var success = await getranks(req.headers.server_id);
+    } else if (req.headers.type === 'misc/checkrank') {
+        var success = await checkrank(req.headers.server_id, req.headers.payload);
     }
+
+
     if (success) {
         console.log("misc get success")
         res.status(200).json(success);
