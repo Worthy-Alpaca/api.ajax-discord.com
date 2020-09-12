@@ -25,14 +25,14 @@ router.post('/register', verify, async (req, res) => {
 
     //get components
     const username = req.body.username;
-    const sucess = await newServer(req.body.guild);
+    const success = await newServer(req.body.guild);
     //console.log(req.body.guild)
-    if (sucess) {
+    if (success) {
         con.query('SELECT * FROM login WHERE server_id = ?', [username], function (error, results, fields) {
             if (results.length > 0) {
                 /* res.send('This user already exists') */
                 res.status(907).json({
-                    sucess: false,
+                    success: false,
                     token: null,
                     err: 'This user already exists'
                 });
@@ -45,7 +45,7 @@ router.post('/register', verify, async (req, res) => {
         });
     } else {
         res.status(907).json({
-            sucess: false,
+            success: false,
             token: null,
             err: 'This user already exists'
         });
@@ -70,13 +70,13 @@ router.post('/login', (req, res) => {
         if (results.length > 1) {
         /* res.status(400).send("More then one user detected. Please contact a server admin!"); */
             res.status(401).json({
-                sucess: false,
+                success: false,
                 token: null,
                 err: 'More then one user detected. Please contact a server admin!'
             });
         } else if (results.length < 1) {
             return res.status(401).json({
-                sucess: false,
+                success: false,
                 token: null,
                 err: 'Entered Username incorrect!'
             });
@@ -87,13 +87,13 @@ router.post('/login', (req, res) => {
             const validPass = await bcrypt.compare(req.body.password, results[0].password);
             if (!validPass) {
                 return res.status(401).json({
-                    sucess: false,
+                    success: false,
                     token: null,
                     err: 'Entered Password incorrect!'
                 });
             }
             res.json({
-                sucess: true,
+                success: true,
                 err: null,
                 token
             });

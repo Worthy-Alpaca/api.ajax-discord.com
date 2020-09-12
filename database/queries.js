@@ -237,4 +237,42 @@ module.exports = {
             })
         })
     },
+
+    delreddit: function (guild, reddit) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM reddits WHERE server_id = '${guild.id}' AND reddit = '${reddit}'`, (err, rows) => {
+                if (rows.length < 1) {
+                    return resolve(false);
+                } else {
+                    sql = `DELETE FROM reddits WHERE server_id = '${guild.id}' AND reddit = '${reddit}'`
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(error);
+                    }
+                }
+            })
+        })
+    },
+
+    getreddits: function (id) {
+        var reddits = []
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM reddits WHERE server_id = '${id}'`, (err, rows) => {
+                if (rows.length < 1) {
+                    resolve(false);
+                } else {                    
+                    a = 0;
+                    while (a !== rows.length) {
+                        name = rows[a].reddit;
+                        reddits.push(name);
+                        a++;
+                    }
+
+                    resolve(reddits);
+                }
+            })
+        })
+    },
 }

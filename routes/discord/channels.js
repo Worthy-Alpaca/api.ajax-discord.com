@@ -13,13 +13,13 @@ router.post('/create', verify, async (req, res) => {
     if (success) {
         console.log("channel adding success")
         res.status(200).json({
-            sucess: true,
+            success: true,
             err: null
         });
     } else {
         console.log("channel create error");
         res.status(409).json({
-            sucess: false,
+            success: false,
             err: success
         });
     }
@@ -35,13 +35,13 @@ router.delete('/delete', verify, async (req, res) => {
     if (success) {
         console.log("channel delete success")
         res.status(200).json({
-            sucess: true,
+            success: true,
             err: null
         });
     } else {
         console.log("channel delete error");
         res.status(409).json({
-            sucess: false,
+            success: false,
             err: success
         });
     }
@@ -57,13 +57,13 @@ router.put('/update', verify, async (req, res) => {
     if (success) {
         console.log("channel update success")
         res.status(200).json({
-            sucess: true,
+            success: true,
             err: null
         });
     } else {
         console.log("channel update error");
         res.status(409).json({
-            sucess: false,
+            success: false,
             err: success
         });
     }

@@ -13,13 +13,13 @@ router.post('/create', verify, async (req, res) => {
     if (success) {
         console.log("role adding success")
         res.status(200).json({
-            sucess: true,
+            success: true,
             err: null
         });
     } else {
         console.log("role adding error");
         res.status(409).json({
-            sucess: false,
+            success: false,
             err: success
         });
     }
@@ -35,13 +35,13 @@ router.delete('/delete', verify, async (req, res) => {
     if (success) {
         console.log("role delete success")
         res.status(200).json({
-            sucess: true,
+            success: true,
             err: null
         });
     } else {
         console.log("role delete error");
         res.status(409).json({
-            sucess: false,
+            success: false,
             err: success
         });
     }
@@ -57,13 +57,13 @@ router.put('/update', verify, async (req, res) => {
     if (success === true) {
         console.log("role update success")
         res.status(200).json({
-            sucess: true,
+            success: true,
             err: null
         });
     } else if (success === 'Name not changed') {
         console.log("role update error");
         res.status(409).json({
-            sucess: false,
+            success: false,
             err: success
         });
     }
