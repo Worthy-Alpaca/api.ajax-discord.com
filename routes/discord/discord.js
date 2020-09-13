@@ -23,13 +23,29 @@ router.post('/showchannels', verify, async (req, res) => {
     res.end();
 });
 
-router.get('/getserver', verify, async (req, res) => {
-    //console.log(req.headers)
+router.get('/getserver/', verify, async (req, res) => {
+    //console.log(req.query)
     //get components
-    const server_id = req.headers.serverid;
-    const currentserver = await getcurrentserver(server_id);
+    //const server_id = req.headers.serverid;
+    const success = await getcurrentserver(req.query.guildID);
 
-    res.json(currentserver);
+    if (success || typeof success == 'number') {
+        console.log("general get success")
+        res.status(200).json(success);
+    } else if (success === false) {
+        res.status(200).json({
+            status: 200,
+            success: false,
+            err: 'no data'
+        });
+    } else {
+        console.log("general get error");
+        res.status(409).json({
+            status: 409,
+            success: false,
+            err: success
+        });
+    }
     res.end();
 });
 
@@ -45,7 +61,7 @@ router.delete('/deleteserver', verify, async (req, res) => {
             err: null
         });
     } else {
-        res.status(409).json({
+        res.status(200).json({
             success: false,
             err: "Couldn't delete from Database"
         });
@@ -77,6 +93,7 @@ router.put('/setup', verify, async (req, res) => {
 })
 
 router.get('/check', verify, async (req, res) => {
+    console.log("Bot connected successfully")
     res.status(200).json({
         success: true,
         err: null
@@ -88,7 +105,7 @@ router.get('/announcements', verify, async (req, res) => {
     if (req.headers.type === 'announcements/getserver') {
         var success = await getservers();
     } else if (req.headers.type === 'announcements/getchannel') {
-        var success = await getserverchannel(req.headers.payload);
+        var success = await getserverchannel(req.query.payload);
     }
 
     if (success || typeof success == 'number') {

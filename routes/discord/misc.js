@@ -102,13 +102,13 @@ router.put('/update', verify, async (req, res) => {
 router.get('/get', verify, async (req, res) => {
 
     if (req.headers.type === 'misc/reddit') {
-        var success = await getreddits(req.headers.serverid);
+        var success = await getreddits(req.query.guildID);
     } else if (req.headers.type === 'misc/rank') {
-        var success = await getranks(req.headers.serverid);
+        var success = await getranks(req.query.guildID);
     } else if (req.headers.type === 'misc/checkrank') {
-        var success = await checkrank(req.headers.serverid, req.headers.payload);
+        var success = await checkrank(req.query.guildID, req.query.payload);
     } else if (req.headers.type === 'misc/infractions') {
-        var success = await getinfractions(req.headers.payload, req.headers.extra_payload);        
+        var success = await getinfractions(req.query.payload, req.query.extraPayload);        
     }
 
 

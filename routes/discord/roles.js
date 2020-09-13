@@ -68,6 +68,13 @@ router.put('/update', verify, async (req, res) => {
         });
     }
     res.end();
+});
+
+router.get('/get', verify, async (req, res) => {
+    res.status(404).json({
+        message: "No Data here yet"
+    })
+    res.end();
 })
 
 module.exports = router;
