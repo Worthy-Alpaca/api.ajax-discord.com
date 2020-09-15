@@ -55,7 +55,7 @@ sudo apt-get install npm
 
 - Now clone the repository
 ```
-git clone https://github.com/Worthy-Alpaca/AJAX.git
+git clone https://github.com/Worthy-Alpaca/api.ajax-discord.com.git
 ```
 
 - Now install the dependencies from package.json
