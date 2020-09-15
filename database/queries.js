@@ -401,7 +401,7 @@ module.exports = {
     },
 
     getinfractions: function (server, rMember) {
-        //con.query(`CREATE TABLE IF NOT EXISTS ${server}(member_id VARCHAR(20) NOT NULL UNIQUE, member_name TEXT NOT NULL, infractions INT NOT NULL);`)
+        con.query(`CREATE TABLE IF NOT EXISTS ${server}(member_id VARCHAR(20) NOT NULL UNIQUE, member_name TEXT NOT NULL, infractions INT NOT NULL);`)
         var infractions;
         return new Promise(function (resolve, reject) {
             con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember}'`, (error, rows) => {
