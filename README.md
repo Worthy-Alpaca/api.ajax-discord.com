@@ -5,7 +5,7 @@
 ![requirements](https://img.shields.io/badge/requirements-up%20to%20date-brightgreen)
 
 **This is the API behind the AJAX discord bot project.**
-*It is a requirement to run AJAX since version 4.0.0*
+*Since AJAX's version 4.0.0 you **need** this API to run it*
 
 > As this project is under heavy development, I cannot offer support at this time.  However, please do report bugs or issues on my little project [here.](https://github.com/Worthy-Alpaca/AJAX/issues)
 
@@ -37,12 +37,21 @@ By contributing to this repository, you are expected to know and follow the rule
     ```
     sudo apt-get install nodejs
     ```
-    * Download for Windows systems [here](https://nodejs.org/en/download/)
+    - Download for Windows systems [here](https://nodejs.org/en/download/)
+
+    - Make sure it's version 12.X or higher
+    ```
+    node -v
+    ```
 
 - Then you need to install the Node Package Manager (only on linux)
 ```
 sudo apt-get install npm
 ```
+  - Make sure it's the latest version
+  ```
+  npm -v
+  ```
 
 - Now clone the repository
 ```
