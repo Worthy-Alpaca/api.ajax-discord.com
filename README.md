@@ -48,7 +48,7 @@ By contributing to this repository, you are expected to know and follow the rule
 ```
 sudo apt-get install npm
 ```
-  - Make sure it's the latest version
+  * Make sure it's the latest version
   ```
   npm -v
   ```
