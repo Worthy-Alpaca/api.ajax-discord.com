@@ -112,10 +112,11 @@ router.get('/get', verify, async (req, res) => {
     }
 
 
-    if (success || typeof success == 'number') {
+    if (success.success === true || typeof success == 'number') {
         console.log("misc get success")
-        res.status(200).json(success);
-    } else if (success === false) {
+        res.status(200).json(success.value);
+    } else if (success.success === false) {
+        console.log("misc get failure")
         res.status(200).json({
             status: 200,
             success: false,

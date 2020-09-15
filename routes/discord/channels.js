@@ -53,15 +53,20 @@ router.put('/update', verify, async (req, res) => {
     const guild = req.body.guild;
 
     const success = await updatechannel(channel, guild);
-
-    if (success) {
-        console.log("channel update success")
+    if (success === true) {
+        console.log("misc update success")
         res.status(200).json({
             success: true,
             err: null
         });
+    } else if (success === false) {
+        res.status(200).json({
+            status: 200,
+            success: false,
+            err: 'no such data'
+        });
     } else {
-        console.log("channel update error");
+        console.log("misc update error");
         res.status(409).json({
             success: false,
             err: success
