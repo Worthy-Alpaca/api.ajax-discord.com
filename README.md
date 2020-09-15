@@ -4,7 +4,8 @@
 [![MySQL](https://img.shields.io/badge/MySQL-v.8.0-9cf)](https://www.mysql.com/)
 ![requirements](https://img.shields.io/badge/requirements-up%20to%20date-brightgreen)
 
-This is the API behind the AJAX discord bot project.
+**This is the API behind the AJAX discord bot project.**
+*It is a requirement to run AJAX since version 4.0.0*
 
 > As this project is under heavy development, I cannot offer support at this time.  However, please do report bugs or issues on my little project [here.](https://github.com/Worthy-Alpaca/AJAX/issues)
 
@@ -68,7 +69,7 @@ npm install
 - Lastly you need to put some things into the included env file and rename it to .env
     - Your desired Database name (make sure this correspondes with the step above)
     - Your database password
-    - The Website Address
+    - The Website Address (Not needed if you only use the bot)
     - The API token secret (make sure that this is the same as in AJAX and ajax-discord.com)
 
 Thats it
