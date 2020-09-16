@@ -23,7 +23,7 @@ router.post('/showchannels', verify, async (req, res) => {
     res.end();
 });
 
-router.get('/getserver/', verify, async (req, res) => {
+router.get('/getserver', verify, async (req, res) => {
     //console.log(req.query)
     //get components
     //const server_id = req.headers.serverid;
@@ -70,11 +70,8 @@ router.delete('/deleteserver', verify, async (req, res) => {
 }),
     
 router.put('/setup', verify, async (req, res) => {
-    const guild = req.body.guild;
-    const field = req.body.field;
-    const value = req.body.value;
     //console.log(value)
-    const success = await setServer(guild, field, value);
+    const success = await setServer(req.body.guild, req.body.field, req.body.value);
 
     if (success === true) {
         console.log("update of field successfull")
