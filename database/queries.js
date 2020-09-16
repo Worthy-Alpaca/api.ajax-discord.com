@@ -473,7 +473,7 @@ module.exports = {
 
         return new Promise(function (resolve, reject) {
             con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember.userID}'`, (error, rows) => {
-                if (error) throw error;
+                if (error) return resolve(error.code);
                 let sql;
                 if (rows[0].member_id === rMember.userID) {
                     var infraction = rows[0].infractions + 1;
@@ -495,6 +495,7 @@ module.exports = {
         var servers = []
         return new Promise(function (resolve, reject) {
             con.query(`SELECT * FROM servers`, (error, rows) => {
+                if (error) return resolve(error.code);
                 if (rows.length < 1) {
                     name = "I'm not deployed on any servers :frowning2:"
                     ranks.push(name)
@@ -516,17 +517,57 @@ module.exports = {
     getserverchannel: function (srv) {
         var chnl;
         return new Promise(function (resolve, reject) {
-            try {
-                con.query(`SELECT * FROM servers WHERE id = '${srv}'`, (error, rows) => {
-                    if (rows[0].reports === null) {
-                        return resolve(false);
-                    } else if (rows.length === 1) {
-                        return resolve(rows[0].reports);
-                    }
-                })
-            } catch (error) {
-                return resolve(error);
-            }
+            
+            con.query(`SELECT * FROM servers WHERE id = '${srv}'`, (error, rows) => {
+                if (error) return resolve(error.code);
+
+                if (rows[0].reports === null) {
+                    return resolve(false);
+                } else if (rows.length === 1) {
+                    return resolve(rows[0].reports);
+                }
+            })
+            
+        })
+    },
+
+    checkcommand: function (command) {
+        return new Promise(function (resolve, reject) {
+            
+            con.query(`SELECT * FROM commands WHERE name = '${command.name}' AND category = '${command.category}'`, (error, rows) => {
+                if (error) return resolve(error.code);
+                if (command.descriptionlong) {
+                    var description = command.descriptionlong;
+                } else {
+                    var description = command.description;
+                }
+
+                if (rows.length === 1) {
+                    return resolve(false);
+                } else {
+                    sql = `INSERT INTO commands (name, category, description) VALUES ('${command.name}', '${command.category}', "${description}")`;
+                    try {
+                        con.query(sql);
+                        return resolve(true);
+                    } catch (error) {
+                        return resolve(error);
+                    }                    
+                }
+            })
+            
+        })
+    },
+
+    getcommands: function () {
+        var chnl;
+        return new Promise(function (resolve, reject) {
+
+            con.query(`SELECT * FROM commands`, (error, rows) => {
+                if (error) return resolve(error.code);
+
+
+            })
+
         })
     },
 }
