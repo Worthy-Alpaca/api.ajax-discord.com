@@ -1,7 +1,7 @@
 {
   "name": "api.ajax-discord.com",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.4a",
+  "description": "This is the API behind the AJAX discord bot project",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
