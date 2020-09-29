@@ -25,7 +25,7 @@ const misc = require('./routes/discord/misc');
 const commands = require('./routes/discord/commands');
 
 //Import database connection
-const con = require('./database/index');
+/* const con = require('./database/index');
 
 con.connect(err => {
     if (err) console.log(err);
@@ -36,7 +36,7 @@ con.connect(err => {
     con.query("CREATE TABLE IF NOT EXISTS channels(server_id VARCHAR(255) NOT NULL, channel_id VARCHAR(255) NOT NULL UNIQUE, channel_name TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
     con.query("CREATE TABLE IF NOT EXISTS roles(server_id VARCHAR(255) NOT NULL, role_id VARCHAR(255) NOT NULL UNIQUE, role_name TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
     con.query("CREATE TABLE IF NOT EXISTS commands(name VARCHAR(512) NOT NULL, category VARCHAR(512) NOT NULL, description VARCHAR(1024) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
-})
+}) */
 
 //Middleware
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -2,7 +2,9 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { getcurrentserver, getchannels, deleteServer1, deleteServer2, setServer, getservers, getserverchannel } = require('../../database/queries.js');
+const { checkstatus, getcurrentserver, getchannels, deleteServer1, deleteServer2, setServer, getservers, getserverchannel } = require('../../database/queries.js');
+///import DB connection
+const con = require('../../database/index');
 
 //add new user to database
 router.post('/showserver', verify, async (req, res) => {
@@ -90,11 +92,21 @@ router.put('/setup', verify, async (req, res) => {
 })
 
 router.get('/check', verify, async (req, res) => {
-    console.log("Bot connected successfully")
-    res.status(200).json({
-        success: true,
-        err: null
-    });
+    console.log("Bot connection successfully")
+    
+    const success = await checkstatus(req.query.payload);
+    
+    if (success === true) {        
+        res.status(200).json({
+            success: true,
+            err: null
+        });
+    } else {        
+        res.status(409).json({
+            success: false,
+            err: success
+        });
+    }
     res.end();
 })
 

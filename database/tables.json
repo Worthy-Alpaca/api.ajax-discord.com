@@ -1,0 +1,10 @@
+{
+    "tables": [
+        "servers",
+        "ranks",
+        "login",
+        "channels", 
+        "roles",
+        "commands"
+    ]
+}

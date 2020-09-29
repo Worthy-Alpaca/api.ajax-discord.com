@@ -1,5 +1,5 @@
-const { response } = require('express');
 const con = require('./index');
+const { tables } = require('../database/tables.json');
 
 module.exports = {
     getcurrentserver: function(server_id) {
@@ -570,4 +570,25 @@ module.exports = {
 
         })
     },
+
+    checkstatus: function () {
+        var check = 0;
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM information_schema.tables WHERE table_schema = 'discord'`, (error, rows) => {
+                if (error) return resolve(error.code);
+                
+                rows.forEach(element => {
+                    if (tables.includes(element.TABLE_NAME)) {
+                        check++;
+                    }
+                });
+                
+                if (check === tables.length) {
+                    return resolve(true);
+                } else {
+                    return resolve(false);
+                }
+            })
+        })
+    }
 }
