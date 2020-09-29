@@ -2,7 +2,7 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { checkcommand, deleteTable } = require('../../database/queries.js');
+const { checkcommand, deleteTable, getcommands } = require('../../database/queries.js');
 
 router.post('/create', verify, async (req, res) => {
     
@@ -74,10 +74,10 @@ router.put('/update', verify, async (req, res) => {
 });
 
 router.get('/get', verify, async (req, res) => {
+    const commands = await getcommands();
+    console.log(commands)
     
-    res.status(404).json({
-        message: "No Data here yet"
-    })
+    res.json(commands);
 
     res.end();
 })

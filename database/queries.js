@@ -577,13 +577,33 @@ module.exports = {
         })
     },
 
-    getcommands: function () {
-        var chnl;
+    getcommands: function () {        
+        const setup = [];
+        const info = [];
+        const moderation = [];
+        const fun = [];
         return new Promise(function (resolve, reject) {
 
             con.query(`SELECT * FROM commands`, (error, rows) => {
                 if (error) return resolve(error.code);
-
+                rows.forEach(element => {
+                    if (element.category === "setup") {
+                        setup.push(`!${element.name} => ${element.description}`)
+                    } else if (element.category === "info") {
+                        info.push(`!${element.name} => ${element.description}`)
+                    } else if (element.category === "moderation") {
+                        moderation.push(`!${element.name} => ${element.description}`)
+                    } else if (element.category === "fun") {
+                        fun.push(`!${element.name} => ${element.description}`)
+                    }
+                })
+                const commands = {
+                    "setup": setup,
+                    "info": info,
+                    "moderation": moderation,
+                    "fun": fun
+                }
+                return resolve(commands);
 
             })
 
