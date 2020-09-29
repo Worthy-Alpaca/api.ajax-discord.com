@@ -73,7 +73,7 @@ router.put('/update', verify, async (req, res) => {
     res.end();
 });
 
-router.get('/get', verify, async (req, res) => {
+router.get('/get', async (req, res) => {
     const commands = await getcommands();
     console.log(commands)
     
