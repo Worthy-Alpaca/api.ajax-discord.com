@@ -532,8 +532,9 @@ module.exports = {
     },
 
     checkcommand: function (command) {
+        con.query("CREATE TABLE IF NOT EXISTS commands(name VARCHAR(512) NOT NULL, category VARCHAR(512) NOT NULL, description VARCHAR(1024) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
         return new Promise(function (resolve, reject) {
-            
+            var sql;
             con.query(`SELECT * FROM commands WHERE name = '${command.name}' AND category = '${command.category}'`, (error, rows) => {
                 if (error) return resolve(error.code);
                 if (command.descriptionlong) {
@@ -543,7 +544,25 @@ module.exports = {
                 }
 
                 if (rows.length === 1) {
-                    return resolve(false);
+                    //console.log(rows[0])
+                    if (rows[0].name === command.name && rows[0].category === command.category && rows[0].description === description) {
+                        return resolve(false);
+                    } else {
+                        const oldname = rows[0].name;
+                        console.log(oldname, command.name)
+                        sql = `UPDATE commands SET name = '${command.name}' WHERE name = "${oldname}"`
+                        con.query(sql);
+                        sql = `UPDATE commands SET category = '${command.category}' WHERE name = "${oldname}"`
+                        con.query(sql);
+                        sql = `UPDATE commands SET description = "${description}" WHERE name = "${oldname}"`
+                        try {
+                            con.query(sql);
+                            return resolve(false);
+                        } catch (error) {
+                            return resolve(error);
+                        } 
+                    }
+                    
                 } else {
                     sql = `INSERT INTO commands (name, category, description) VALUES ('${command.name}', '${command.category}', "${description}")`;
                     try {
@@ -588,6 +607,15 @@ module.exports = {
                 } else {
                     return resolve(false);
                 }
+            })
+        })
+    },
+
+    deleteTable: function (table) {
+        return new Promise(function (resolve, reject) {
+            con.query(`DROP TABLE ${table}`, (error, rows) => {
+                if (error) return resolve(error.code);
+                return resolve(true);
             })
         })
     }

@@ -72,7 +72,7 @@ router.delete('/deleteserver', verify, async (req, res) => {
 }),
     
 router.put('/setup', verify, async (req, res) => {
-    //console.log(value)
+    //console.log(req.body)
     const success = await setServer(req.body.guild, req.body.field, req.body.value);
 
     if (success === true) {

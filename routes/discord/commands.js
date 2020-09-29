@@ -2,14 +2,14 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { checkcommand } = require('../../database/queries.js');
+const { checkcommand, deleteTable } = require('../../database/queries.js');
 
 router.post('/create', verify, async (req, res) => {
     
     const success = await checkcommand(req.body.command)
     
     if (success === true) {
-        console.log("command adding success")
+        //console.log("command adding success")
         res.status(200).json({
             success: true,
             err: null
@@ -31,11 +31,12 @@ router.post('/create', verify, async (req, res) => {
 });
 
 router.delete('/delete', verify, async (req, res) => {
-    res.status(404).json({
-        message: "No Data here yet"
-    })
 
-    /* if (success) {
+    if (req.headers.type === "delete/table") {
+        var success = await deleteTable(req.body.table);
+    }
+
+    if (success === true) {
         console.log("command delete success")
         res.status(200).json({
             success: true,
@@ -47,7 +48,7 @@ router.delete('/delete', verify, async (req, res) => {
             success: false,
             err: success
         });
-    } */
+    }
     res.end();
 });
 
