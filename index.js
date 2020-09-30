@@ -13,6 +13,8 @@ require('dotenv').config({ path: __dirname + '/.env' });
 //Import attributes from package.json
 const { name, version } = require('./package.json');
 
+//Import CORS
+var cors = require('cors');
 
 //Import Routes
 const authRoute = require('./routes/auth');
@@ -44,6 +46,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(helmet());
+app.use(cors());
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', '*')
