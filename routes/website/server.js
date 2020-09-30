@@ -23,6 +23,7 @@ router.get('/getserver', verify, async (req, res) => {
 
     if (data || typeof data == 'number') {
         console.log("general get success")
+        res.headers.append('Access-Control-Allow-Origin', '*');
         res.status(200).json(server);
     } else if (data === false) {
         res.status(200).json({
