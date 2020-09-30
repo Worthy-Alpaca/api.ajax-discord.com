@@ -23,6 +23,7 @@ const channels = require('./routes/discord/channels');
 const roles = require('./routes/discord/roles');
 const misc = require('./routes/discord/misc');
 const commands = require('./routes/discord/commands');
+const server = require('./routes/website/server');
 
 //Import database connection
 /* const con = require('./database/index');
@@ -89,5 +90,6 @@ app.use('/discord/channel', channels);
 app.use('/discord/role', roles);
 app.use('/discord/misc', misc);
 app.use('/discord/commands', commands);
+app.use('/website', server);
 
 app.listen(process.env.PORT || 5000, () => console.log('Server running on port 5000'));
