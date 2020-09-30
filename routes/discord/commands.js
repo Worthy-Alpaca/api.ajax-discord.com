@@ -20,6 +20,7 @@ router.post('/create', verify, async (req, res) => {
             err: null
         });
     } else {
+        console.log(success)
         console.log("command adding error");
         res.status(409).json({
             status: 409,
@@ -75,7 +76,7 @@ router.put('/update', verify, async (req, res) => {
 
 router.get('/get', async (req, res) => {
     const commands = await getcommands();
-    console.log(commands)
+    //console.log(commands)
     
     res.json(commands);
 
