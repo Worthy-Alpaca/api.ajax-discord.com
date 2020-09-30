@@ -92,11 +92,11 @@ router.put('/setup', verify, async (req, res) => {
 })
 
 router.get('/check', verify, async (req, res) => {
-    console.log("Bot connection successfully")
     
     const success = await checkstatus(req.query.payload);
     
-    if (success === true) {        
+    if (success === true) {  
+        console.log("Bot connection successfully");
         res.status(200).json({
             success: true,
             err: null
