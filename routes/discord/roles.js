@@ -10,7 +10,7 @@ router.post('/create', verify, async (req, res) => {
 
     const success = await addrole(role, guild);
 
-    if (success) {
+    if (success === true) {
         console.log("role adding success")
         res.status(200).json({
             success: true,
@@ -32,7 +32,7 @@ router.delete('/delete', verify, async (req, res) => {
 
     const success = await delrole(role, guild);
 
-    if (success) {
+    if (success === true) {
         console.log("role delete success")
         res.status(200).json({
             success: true,

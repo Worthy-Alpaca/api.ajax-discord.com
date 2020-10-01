@@ -26,7 +26,8 @@ module.exports = {
     },
 
     addchannel: function (channel, guild) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
+            con.query("CREATE TABLE IF NOT EXISTS channels(server_id VARCHAR(255) NOT NULL, channel_id VARCHAR(255) NOT NULL UNIQUE, channel_name TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
             con.query(`SELECT * FROM channels WHERE server_id = '${guild.id}' AND channel_id = '${channel.id}'`, (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;
@@ -91,6 +92,7 @@ module.exports = {
 
     addrole: function (role, guild) {
         return new Promise(function (resolve, reject) {
+            con.query("CREATE TABLE IF NOT EXISTS roles(server_id VARCHAR(255) NOT NULL, role_id VARCHAR(255) NOT NULL UNIQUE, role_name TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
             con.query(`SELECT * FROM roles WHERE server_id = '${guild.id}' AND role_id = '${role.id}'`, (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;

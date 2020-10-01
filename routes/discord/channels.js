@@ -10,7 +10,7 @@ router.post('/create', verify, async (req, res) => {
 
     const success = await addchannel(channel, guild);
 
-    if (success) {
+    if (success === true) {
         console.log("channel adding success")
         res.status(200).json({
             success: true,
@@ -32,7 +32,7 @@ router.delete('/delete', verify, async (req, res) => {
 
     const success = await delchannel(channel, guild);
 
-    if (success) {
+    if (success === true) {
         console.log("channel delete success")
         res.status(200).json({
             success: true,
