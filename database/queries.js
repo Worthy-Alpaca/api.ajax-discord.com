@@ -640,5 +640,20 @@ module.exports = {
                 return resolve(true);
             })
         })
+    },
+
+    registerNew: function (username, hashedPassword) {
+        return new Promise(function (resolve, reject) {
+            con.query('SELECT * FROM login WHERE server_id = ?', [username], function (error, results, fields) {
+                if (error) return resolve(error.code);
+                if (results.length > 0) {
+                    return resolve(false);
+                } else {
+                    sql = `INSERT INTO login (server_id, password) VALUES ('${username}', '${hashedPassword}')`
+                    con.query(sql);
+                    return resolve(true);
+                }
+            });
+        })
     }
 }

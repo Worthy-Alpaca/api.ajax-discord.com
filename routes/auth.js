@@ -7,7 +7,7 @@ const verify = require('./verifyRegister');
 //import encryption
 const bcrypt = require('bcryptjs');
 //import DB query
-const { newServer } = require('../database/queries');
+const { newServer, registerNew } = require('../database/queries');
 
 //add new user to database
 router.post('/register', verify, async (req, res) => {
@@ -51,6 +51,38 @@ router.post('/register', verify, async (req, res) => {
         });
         res.end();
     }
+});
+
+router.post('/registernew', verify, async (req, res) => {
+    //console.log(req.body)
+    //validating request body
+
+    //hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    //get components
+    const username = req.query.username;
+    const success = await registerNew(username, hashedPassword);
+    
+    //console.log(req.body.guild)
+    if (success === true) {
+        res.status(200).json({
+            success: true,
+            err: null
+        });
+    } else if (success === false) {
+        res.status(200).json({
+            success: false,
+            err: 'This user already exists'
+        });        
+    } else {
+        res.status(907).json({
+            success: false,
+            err: success
+        });  
+    }
+    res.end();
 });
 
 
