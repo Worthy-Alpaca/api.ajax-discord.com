@@ -655,5 +655,71 @@ module.exports = {
                 }
             });
         })
+    },
+
+    createCoC: function (guildID, coc) {
+        return new Promise(function (resolve, reject) {
+            con.query('SELECT * FROM coc WHERE server_id = ? AND coc = ?', [guildID, coc], function (error, rows) {
+                if (error) return resolve(error.code);
+
+                if (rows.length > 0) {
+                    return resolve(false);
+                } else {
+                    sql = `INSERT INTO coc (server_id, coc) VALUES ('${guildID}', "${coc}")`
+                    con.query(sql);
+                    return resolve(true);
+                }
+            })
+        })
+    },
+
+    getCoC: function (guildID) {
+        let coc = [];
+        return new Promise(function (resolve, reject) {
+            con.query('SELECT * FROM coc WHERE server_id = ?', [guildID], function (error, rows) {
+                if (error) return resolve(error.code);
+
+                if (rows.length < 1) {
+                    name = "No custom Code of Conduct on this server"
+                    coc.push(name);
+                    resolve(coc);
+                } else {
+                    return resolve({
+                        success: true,
+                        value: rows
+                    });
+                }
+            })
+        })
+    },
+
+    deleteCoC: function (guildID, id) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM coc WHERE server_id = ? AND id = ?`, [guildID, id], function (error, rows) {
+                if (error) return resolve(error.code);
+                if (rows.length === 1) {
+                    sql = `DELETE FROM coc WHERE server_id = '${guildID}' AND id = '${id}'`
+                    con.query(sql);
+                    return resolve(true);
+                } else {
+                    return resolve(false);
+                }
+            })
+        })
+    },
+
+    updateCoC: function (guildID, id, coc) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM coc WHERE server_id = ? AND id = ?`, [guildID, id], function (error, rows) {
+                if (error) return resolve(error.code);
+                if (rows.length === 1) {
+                    sql = `UPDATE coc SET coc = '${coc}' WHERE server_id = '${guildID}' AND id = '${id}'`
+                    con.query(sql);
+                    return resolve(true);
+                } else {
+                    return resolve(false);
+                }
+            })
+        })
     }
 }

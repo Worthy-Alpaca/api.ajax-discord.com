@@ -2,15 +2,17 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { addreddit, delreddit, getreddits, addrank, delrank, getranks, checkrank, getinfractions, createinfractions, deleteinfractions, updateinfractions } = require('../../database/queries.js');
+const functions = require('../../database/queries.js');
 
 router.post('/create', verify, async (req, res) => {
     if (req.headers.type === 'misc/reddit') {        
-        var success = await addreddit(req.body.guild, req.body.value);
+        var success = await functions.addreddit(req.body.guild, req.body.value);
     } else if (req.headers.type === 'misc/rank') {
-        var success = await addrank(req.body.guild, req.body.value);
+        var success = await functions.addrank(req.body.guild, req.body.value);
     } else if (req.headers.type === 'misc/infractions') {
-        var success = await createinfractions(req.body.server, req.body.value);
+        var success = await functions.createinfractions(req.body.server, req.body.value);
+    } else if (req.headers.type === 'misc/coc') {
+        var success = await functions.createCoC(req.body.guildID, req.body.coc);
     }
 
     if (success === true) {
@@ -40,11 +42,13 @@ router.post('/create', verify, async (req, res) => {
 router.delete('/delete', verify, async (req, res) => {
     
     if (req.headers.type === 'misc/reddit') {
-        var success = await delreddit(req.body.guild, req.body.value);
+        var success = await functions.delreddit(req.body.guild, req.body.value);
     } else if (req.headers.type === 'misc/rank') {
-        var success = await delrank(req.body.guild, req.body.value);
+        var success = await functions.delrank(req.body.guild, req.body.value);
     } else if (req.headers.type === 'misc/infractions') {
-        var success = await deleteinfractions(req.body.server, req.body.value);
+        var success = await functions.deleteinfractions(req.body.server, req.body.value);
+    } else if (req.headers.type === 'misc/coc') {
+        var success = await functions.deleteCoC(req.query.guildID, req.body.id);
     }
 
     if (success === true) {
@@ -74,7 +78,9 @@ router.delete('/delete', verify, async (req, res) => {
 router.put('/update', verify, async (req, res) => {
     
     if (req.headers.type === 'misc/infractions') {
-        var success = await updateinfractions(req.body.server, req.body.value);
+        var success = await functions.updateinfractions(req.body.server, req.body.value);
+    } else if (req.headers.type === 'misc/coc') {
+        var success = await functions.updateCoC(req.query.guildID, req.body.id, req.body.coc);
     }
 
     if (success === true) {
@@ -102,13 +108,15 @@ router.put('/update', verify, async (req, res) => {
 router.get('/get', verify, async (req, res) => {
 
     if (req.headers.type === 'misc/reddit') {
-        var success = await getreddits(req.query.guildID);
+        var success = await functions.getreddits(req.query.guildID);
     } else if (req.headers.type === 'misc/rank') {
-        var success = await getranks(req.query.guildID);
+        var success = await functions.getranks(req.query.guildID);
     } else if (req.headers.type === 'misc/checkrank') {
-        var success = await checkrank(req.query.guildID, req.query.payload);
+        var success = await functions.checkrank(req.query.guildID, req.query.payload);
     } else if (req.headers.type === 'misc/infractions') {
-        var success = await getinfractions(req.query.payload, req.query.extraPayload);        
+        var success = await functions.getinfractions(req.query.payload, req.query.extraPayload);        
+    } else if (req.headers.type === 'misc/coc') {
+        var success = await functions.getCoC(req.query.guildID);
     }
 
 
