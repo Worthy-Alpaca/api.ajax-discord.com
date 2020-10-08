@@ -680,9 +680,14 @@ module.exports = {
                 if (error) return resolve(error.code);
 
                 if (rows.length < 1) {
-                    name = "No custom Code of Conduct on this server"
-                    coc.push(name);
-                    resolve(coc);
+                    no_CoC = {
+                        coc: "No custom Code of Conduct on this server"
+                    }
+                    coc.push(no_CoC);
+                    return resolve({
+                        success: true,
+                        value: coc
+                    });
                 } else {
                     return resolve({
                         success: true,
