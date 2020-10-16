@@ -11,7 +11,6 @@ module.exports = {
                     con.query(sql);
                     return resolve(true);
                 } else if (rows[0].channel_name === channel_name) {
-                    console.log("here")
                     let setcount = rows[0].character_count + count;
                     sql = `UPDATE diagnostics SET character_count = '${setcount}' WHERE channel_name = '${channel_name}'`
                     con.query(sql);
