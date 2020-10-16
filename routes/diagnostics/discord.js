@@ -24,7 +24,12 @@ router.get('/get', verify, async (req, res) => {
     const success = await getstatistics(req.query.payload)
 
     if (success.success === true) {
-        res.status(200).json(success.value);
+        //res.status(200).json(success.value);
+        res.status(200).json({
+            status: 200,
+            success: true,
+            value: success.value
+        });
     } else if (success.success === false) {
         res.status(200).json({
             status: 200,
