@@ -25,6 +25,7 @@ const roles = require('./routes/discord/roles');
 const misc = require('./routes/discord/misc');
 const commands = require('./routes/discord/commands');
 const server = require('./routes/website/server');
+const diagnostics = require('./routes/diagnostics/discord');
 
 //Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,6 +80,7 @@ app.use('/discord/role', roles);
 app.use('/discord/misc', misc);
 app.use('/discord/commands', commands);
 app.use('/website', server);
+app.use('/diagnostics', diagnostics);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
