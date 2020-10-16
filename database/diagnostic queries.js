@@ -45,4 +45,20 @@ module.exports = {
             })
         })
     },
+
+    resetstatistic: function (channel_name) {
+
+        return new Promise(function (resolve, reject) {
+            con.query("SELECT * FROM diagnostics WHERE channel_name = ?", [channel_name], (error, rows) => {
+                if (error) return resolve(error.code);
+                if (rows.length === 1) {
+                    sql = `DELETE FROM diagnostics WHERE channel_name = '${channel_name}'`
+                    con.query(sql);
+                    return resolve(true);
+                } else {
+                    return resolve(false);
+                }
+            });
+        })
+    }
 }
