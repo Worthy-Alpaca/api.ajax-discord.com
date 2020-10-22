@@ -6,7 +6,7 @@ module.exports = {
         return new Promise(function (resolve, reject) {
             con.query('SELECT * FROM servers WHERE id = ?', [server_id], function (error, results, fields) {
                 if (error) return resolve(error.code);
-                if (results.length = 1) {
+                if (results.length === 1) {
                     
                     resolve(results[0])
                 } else {
@@ -214,9 +214,7 @@ module.exports = {
         return new Promise(function (resolve, reject) {
             con.query(`SELECT * FROM servers WHERE id = '${guild.id}'`, (error, rows) => {
                 if (error) return resolve(error.code);
-                let sql;
                 sql = `UPDATE servers SET ${field} = '${value}' WHERE id = '${guild.id}'`;
-                adm = true;
                 try {
                     con.query(sql);
                     return resolve(true);
