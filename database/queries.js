@@ -582,6 +582,7 @@ module.exports = {
         const info = [];
         const moderation = [];
         const fun = [];
+        const music = [];
         return new Promise(function (resolve, reject) {
 
             con.query(`SELECT * FROM commands`, (error, rows) => {
@@ -595,13 +596,16 @@ module.exports = {
                         moderation.push(`!${element.name} => ${element.description}`)
                     } else if (element.category === "fun") {
                         fun.push(`!${element.name} => ${element.description}`)
+                    } else if (element.category === "music") {
+                        music.push(`!${element.name} => ${element.description}`)
                     }
                 })
                 const commands = {
                     "setup": setup,
                     "info": info,
                     "moderation": moderation,
-                    "fun": fun
+                    "fun": fun,
+                    "music": music
                 }
                 return resolve(commands);
 
