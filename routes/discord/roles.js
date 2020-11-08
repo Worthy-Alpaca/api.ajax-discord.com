@@ -53,7 +53,6 @@ router.put('/update', verify, async (req, res) => {
     const guild = req.body.guild;
 
     const success = await updaterole(role, guild);
-    console.log(success);
     if (success === true) {
         console.log("role update success")
         res.status(200).json({
