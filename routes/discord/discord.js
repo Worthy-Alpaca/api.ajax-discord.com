@@ -2,7 +2,7 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { checkstatus, getcurrentserver, getchannels, deleteServer1, deleteServer2, setServer, getservers, getserverchannel } = require('../../database/queries.js');
+const { checkstatus, getcurrentserver, getchannels, deleteServer1, deleteServer2, deleteServer3, deleteServer4, deleteServer5, deleteServer6, deleteServer7, deleteServer8, setServer, getservers, getserverchannel } = require('../../database/queries.js');
 ///import DB connection
 const con = require('../../database/index');
 
@@ -53,11 +53,16 @@ router.get('/getserver', verify, async (req, res) => {
 
 router.delete('/deleteserver', verify, async (req, res) => {
     const guild = req.body.guild;
-    
     const green1 = await deleteServer1(guild);
     const green2 = await deleteServer2(guild);
+    const green3 = await deleteServer3(guild);
+    const green4 = await deleteServer4(guild);
+    const green5 = await deleteServer5(guild);
+    const green6 = await deleteServer6(guild);
+    const green7 = await deleteServer7(guild);
+    const green8 = await deleteServer8(guild);
 
-    if (green1 && green2) {
+    if (green1 && green2 && green3 && green4 && green5 && green6 && green7 && green8) {
         res.status(200).json({
             success: true,
             err: null

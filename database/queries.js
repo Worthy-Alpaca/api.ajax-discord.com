@@ -210,6 +210,90 @@ module.exports = {
         })
     },
 
+    deleteServer3: function (guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM roles WHERE server_id = '${guild.id}'`, (error, rows) => {
+                if (error) return resolve(error.code);
+                let sql = `DELETE FROM roles WHERE server_id = '${guild.id}'`
+                try {
+                    con.query(sql);
+                    return resolve(true);
+                } catch (error) {
+                    return resolve(false);
+                }
+            })
+        })
+    },
+
+    deleteServer4: function (guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM channels WHERE server_id = '${guild.id}'`, (error, rows) => {
+                if (error) return resolve(error.code);
+                let sql = `DELETE FROM channels WHERE server_id = '${guild.id}'`
+                try {
+                    con.query(sql);
+                    return resolve(true);
+                } catch (error) {
+                    return resolve(false);
+                }
+            })
+        })
+    },
+
+    deleteServer5: function (guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM coc WHERE server_id = '${guild.id}'`, (error, rows) => {
+                if (error) return resolve(error.code);
+                let sql = `DELETE FROM coc WHERE server_id = '${guild.id}'`
+                try {
+                    con.query(sql);
+                    return resolve(true);
+                } catch (error) {
+                    return resolve(false);
+                }
+            })
+        })
+    },
+
+    deleteServer6: function (guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM ranks WHERE server_id = '${guild.id}'`, (error, rows) => {
+                if (error) return resolve(error.code);
+                let sql = `DELETE FROM ranks WHERE server_id = '${guild.id}'`
+                try {
+                    con.query(sql);
+                    return resolve(true);
+                } catch (error) {
+                    return resolve(false);
+                }
+            })
+        })
+    },
+
+    deleteServer7: function (guild) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM reddits WHERE server_id = '${guild.id}'`, (error, rows) => {
+                if (error) return resolve(error.code);
+                let sql = `DELETE FROM reddits WHERE server_id = '${guild.id}'`
+                try {
+                    con.query(sql);
+                    return resolve(true);
+                } catch (error) {
+                    return resolve(false);
+                }
+            })
+        })
+    },
+
+    deleteServer8: function (guild) {
+        const tblid = Array.from(guild.name)
+        tblid.forEach(function (item, i) { if (item == " ") tblid[i] = "_"; });
+        return new Promise(function (resolve, reject) {
+            con.query(`DROP TABLE IF EXISTS ${tblid.join("")}`);
+            return resolve(true);
+        })
+    },
+
     setServer: function (guild, field, value) {
         return new Promise(function (resolve, reject) {
             con.query(`SELECT * FROM servers WHERE id = '${guild.id}'`, (error, rows) => {
