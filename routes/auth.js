@@ -11,7 +11,6 @@ const { newServer, registerNew } = require('../database/queries');
 
 //add new user to database
 router.post('/register', verify, async (req, res) => {
-    //console.log(req.body)
     //validating request body
     const { error } = registerValidation(req.body);
     if (error) {
@@ -26,7 +25,7 @@ router.post('/register', verify, async (req, res) => {
     //get components
     const username = req.body.username;
     const success = await newServer(req.body.guild);
-    //console.log(req.body.guild)
+    
     if (success) {
         con.query('SELECT * FROM login WHERE server_id = ?', [username], function (error, results, fields) {
             if (results.length > 0) {
@@ -54,8 +53,6 @@ router.post('/register', verify, async (req, res) => {
 });
 
 router.post('/registernew', verify, async (req, res) => {
-    //console.log(req.body)
-    //validating request body
 
     //hash password
     const salt = await bcrypt.genSalt(10);
@@ -88,7 +85,6 @@ router.post('/registernew', verify, async (req, res) => {
 
 //login
 router.post('/login', (req, res) => {
-    //console.log(req.body)
     //validating request body
     const { error } = loginValidation(req.body);
     if (error) {
@@ -129,7 +125,6 @@ router.post('/login', (req, res) => {
                 err: null,
                 token
             });
-            /* res.redirect(process.env.WEBSITE + "/dashboard") */
         }
         res.end();
     });
