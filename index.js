@@ -33,11 +33,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(helmet());
 app.use(cors());
-/* app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', '*')
-    next();
-}); */
 
 //express jsonwebtoken middleware
 const jwtMW = function (req, res, next) {
