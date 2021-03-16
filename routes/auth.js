@@ -110,7 +110,7 @@ router.post('/login', (req, res) => {
             });
         } else {
             //Create and assign token
-            const token = jwt.sign({ _id: username }, process.env.TOKEN_SECRET);
+            const token = jwt.sign({ _id: username }, process.env.TOKEN_SECRET, { expiresIn: "30d" });
             //check if password is correct
             const validPass = await bcrypt.compare(req.body.password, results[0].password);
             if (!validPass) {
