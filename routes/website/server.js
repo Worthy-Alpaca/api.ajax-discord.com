@@ -1,6 +1,6 @@
 const router = require('express').Router();
 //Import verify module
-const verify = require('../verifyRegister');
+const verify = require('../verifyToken');
 //Import functions
 const functions = require('../../database/website_queries');
 const api = require('./functions/apifunctions');

@@ -9,7 +9,7 @@ module.exports = function (req, res, next) {
     // enabling dev mode
     if (process.env.DEV === "true") {
         try {
-            const verified = jwt.verify(token, process.env.TOKEN_SECRET, { ignoreExpiration: true });
+            const verified = jwt.verify(token, process.env.TOKEN_SECRET, { ignoreExpiration: true, algorithms: ['HS256'] });
             req.user = verified;
             next();
         } catch (err) {
@@ -25,7 +25,7 @@ module.exports = function (req, res, next) {
         }
     } else {
         try {
-            const verified = jwt.verify(token, process.env.TOKEN_SECRET, { maxAge: "1m" });
+            const verified = jwt.verify(token, process.env.TOKEN_SECRET, { maxAge: "1m", algorithms: ['HS256'] });
             req.user = verified;
             next();
         } catch (err) {
@@ -37,7 +37,11 @@ module.exports = function (req, res, next) {
                     err: err
                 })
             }
-            res.status(400).send('Invalid Token!!');
+            res.status(400).json({
+                status: 400,
+                success: false,
+                err: err
+            })
         }
     }
 }
