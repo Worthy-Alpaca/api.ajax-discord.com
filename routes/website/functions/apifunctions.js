@@ -8,14 +8,17 @@ module.exports = {
     get_API_call: function (guildID, type = '') {
         return new Promise(async function (resolve, reject) {
             //console.log(token)
-            const response = await fetch(process.env.BOT + `/receive/?guildID=${guildID}`, {
+            const response = await fetch(process.env.BOT + `/recover/?guildID=${guildID}`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'type': type,
                 }
             }).then(function (response) {
-                return response.json();
+                
+                if (response.status === 200) {
+                    return resolve(true);
+                }
             }).catch(error => {
                 return console.log(error);
             })

@@ -58,5 +58,18 @@ module.exports = {
                 resolve(results);
             });
         })
+    },
+
+    recoverCheck: function (guildID) {
+        return new Promise(function (resolve, reject) {
+            con.query('SELECT * FROM servers WHERE server_id = ?', [guildID], function (error, rows) {
+                if (error) return resolve(error.code);
+                if (rows.length === 1) {
+                    return resolve(true);
+                } else {
+                    return resolve(false);
+                }
+            })
+        })
     }
 }

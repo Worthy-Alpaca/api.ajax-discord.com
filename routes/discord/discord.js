@@ -2,9 +2,9 @@ const router = require('express').Router();
 //Import verify module
 const verify = require('../verifyRegister');
 //import DB queries
-const { checkstatus, getcurrentserver, getchannels, deleteServer1, deleteServer2, deleteServer3, deleteServer4, deleteServer5, deleteServer6, deleteServer7, deleteServer8, setServer, getservers, getserverchannel } = require('../../database/queries.js');
-///import DB connection
-const con = require('../../database/index');
+const { recoverPW, checkstatus, getcurrentserver, getchannels, deleteServer1, deleteServer2, deleteServer3, deleteServer4, deleteServer5, deleteServer6, deleteServer7, deleteServer8, setServer, getservers, getserverchannel } = require('../../database/queries.js');
+//import encryption
+const bcrypt = require('bcryptjs');
 
 //add new user to database
 router.post('/showserver', verify, async (req, res) => {
@@ -133,6 +133,29 @@ router.get('/announcements', verify, async (req, res) => {
         });
     } else {
         console.log("general get error");
+        res.status(409).json({
+            status: 409,
+            success: false,
+            err: success
+        });
+    }
+    res.end();
+})
+
+router.put('/recover', verify, async (req, res) => {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.value, salt);
+    const success = await recoverPW(req.body.guild.id, hashedPassword);
+    
+    if (success === true) {
+        console.log("success")
+        res.status(200).json({
+            status: 200,
+            success: true,
+            err: null
+        });
+    } else {
+        console.log("no success")
         res.status(409).json({
             status: 409,
             success: false,

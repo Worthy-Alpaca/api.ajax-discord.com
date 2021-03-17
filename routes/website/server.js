@@ -69,11 +69,23 @@ router.get('/getcomponents', verify, async (req, res) => {
     res.end();
 })
 
-router.put('/test', verify, async (req, res) => {
-    console.log("#################################")
-    console.log(req.body)
-    res.status(200);
-    res.end();
+router.get('/recover', async (req, res) => {
+    const check = functions.recoverCheck(req.query.guildID);
+    if (!check) {
+        return res.status(404).json({
+            status: 409,
+            success: false,
+            err: "No such guild"
+        });
+    }
+    const success = await api.get_API_call(req.query.guildID, "recover");
+    if (success) {
+        return res.status(200).json({
+            status: 200,
+            success: true,
+            err: null
+        });
+    }
 })
 
 module.exports = router;

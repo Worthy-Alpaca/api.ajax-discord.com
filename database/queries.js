@@ -812,5 +812,21 @@ module.exports = {
                 }
             })
         })
+    },
+
+    recoverPW: function (guildID, pw) {
+        return new Promise(function (resolve, reject) {
+            con.query(`SELECT * FROM login WHERE server_id = ?`, [guildID], function (error, rows) {
+                if (error) return resolve(error.code);
+                if (rows.length === 1) {
+                    console.log("updating PW")
+                    sql = `UPDATE login SET password = ? WHERE server_id = ?`
+                    con.query(sql, [pw, guildID]);
+                    return resolve(true);
+                } else {
+                    return resolve(false);
+                }
+            })
+        })
     }
 }
