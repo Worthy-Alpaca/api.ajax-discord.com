@@ -28,15 +28,15 @@ module.exports = {
     addchannel: function (channel, guild) {
         return new Promise(function (resolve, reject) {
             con.query("CREATE TABLE IF NOT EXISTS channels(server_id VARCHAR(255) NOT NULL, channel_id VARCHAR(255) NOT NULL UNIQUE, channel_name TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
-            con.query(`SELECT * FROM channels WHERE server_id = '${guild.id}' AND channel_id = '${channel.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM channels WHERE server_id = ? AND channel_id = ?`, [guild.id, channel.id], (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;
 
                 if (!rows.length) {
                     console.log(channel.name, "added")
-                    sql = `INSERT INTO channels (server_id, channel_id, channel_name) VALUES ('${guild.id}', "${channel.id}", "${channel.name}")`
+                    sql = `INSERT INTO channels (server_id, channel_id, channel_name) VALUES (?, ?, ?)`
                     try {
-                        con.query(sql);
+                        con.query(sql, [guild.id, channel.id, channel.name]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -51,12 +51,12 @@ module.exports = {
 
     delchannel: function (channel, guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM channels WHERE channel_name = '${channel.name}' AND channel_id = '${channel.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM channels WHERE channel_name = ? AND channel_id = ?`, [channel.name, channel.id], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length === 1) {
-                    let sql = `DELETE FROM channels WHERE channel_name = '${channel.name}' AND channel_id = '${channel.id}'`
+                    let sql = `DELETE FROM channels WHERE channel_name = ? AND channel_id = ?`
                     try {
-                        con.query(sql);
+                        con.query(sql, [channel.name, channel.id]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -68,15 +68,15 @@ module.exports = {
 
     updatechannel: function (newChannel, guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM channels WHERE server_id = '${guild.id}' AND channel_id = '${newChannel.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM channels WHERE server_id = ? AND channel_id = ?`, [guild.id, newChannel.id], (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;
                 
                 if (rows.length === 1) {
                     if (rows[0].channel_name !== newChannel.name) {                        
-                        sql = `UPDATE channels SET channel_name = '${newChannel.name}' WHERE channel_id = '${newChannel.id}'`
+                        sql = `UPDATE channels SET channel_name = ? WHERE channel_id = ?`
                         try {
-                            con.query(sql);
+                            con.query(sql, [newChannel.name, newChannel.id]);
                             return resolve(true);
                         } catch (error) {
                             return resolve(error);
@@ -93,14 +93,14 @@ module.exports = {
     addrole: function (role, guild) {
         return new Promise(function (resolve, reject) {
             con.query("CREATE TABLE IF NOT EXISTS roles(server_id VARCHAR(255) NOT NULL, role_id VARCHAR(255) NOT NULL UNIQUE, role_name TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
-            con.query(`SELECT * FROM roles WHERE server_id = '${guild.id}' AND role_id = '${role.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM roles WHERE server_id = ? AND role_id = ?`, [guild.id, role.id], (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;
 
                 if (!rows.length) {                    
-                    sql = `INSERT INTO roles (server_id, role_id, role_name) VALUES ('${guild.id}', "${role.id}", "${role.name}")`
+                    sql = `INSERT INTO roles (server_id, role_id, role_name) VALUES (?, ?, ?)`
                     try {
-                        con.query(sql);
+                        con.query(sql, [guild.id, role.id, role.name]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(false);
@@ -113,12 +113,12 @@ module.exports = {
 
     delrole: function (role, guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM roles WHERE role_name = '${role.name}' AND role_id = '${role.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM roles WHERE role_name = ? AND role_id = ?`, [role.name, role.id], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length === 1) {
-                    let sql = `DELETE FROM roles WHERE role_name = '${role.name}' AND role_id = '${role.id}'`
+                    let sql = `DELETE FROM roles WHERE role_name = ? AND role_id = ?`
                     try {
-                        con.query(sql);
+                        con.query(sql, [role.name, role.id]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(false);
@@ -132,15 +132,15 @@ module.exports = {
 
     updaterole: function (newRole, guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM roles WHERE server_id = '${guild.id}' AND role_id = '${newRole.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM roles WHERE server_id = ? AND role_id = ?`, [guild.id, newRole.id], (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;
 
                 if (rows.length === 1) {
                     if (rows[0].role_name !== newRole.name) {
-                        sql = `UPDATE roles SET role_name = '${newRole.name}' WHERE role_id = '${newRole.id}'`
+                        sql = `UPDATE roles SET role_name = ? WHERE role_id = ?`
                         try {
-                            con.query(sql);
+                            con.query(sql, [newRole.name, newRole.id]);
                             return resolve(true);
                         } catch (error) {
                             return resolve(false);
@@ -158,16 +158,16 @@ module.exports = {
 
     newServer: function (guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM servers WHERE id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM servers WHERE id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;
 
                 if (!rows.length) {
                     console.log(guild.name, "added")
-                    sql = `INSERT INTO servers (id, name) VALUES ('${guild.id}', "${guild.name}")`
+                    sql = `INSERT INTO servers (id, name) VALUES (?, ?)`
                     
                     try {
-                        con.query(sql);
+                        con.query(sql, [guild.id, guild.name]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(false);
@@ -182,11 +182,11 @@ module.exports = {
 
     deleteServer1: function (guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM servers WHERE id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM servers WHERE id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
-                let sql = `DELETE FROM servers WHERE id = '${guild.id}'`
+                let sql = `DELETE FROM servers WHERE id = ?`
                 try {
-                    con.query(sql);
+                    con.query(sql, [guild.id]);
                     return resolve(true);
                 } catch (error) {
                     return resolve(false);
@@ -197,11 +197,11 @@ module.exports = {
 
     deleteServer2: function (guild) {
         return new Promise(function (resolve, reject) {            
-            con.query(`SELECT * FROM login WHERE server_id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM login WHERE server_id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
-                let sql = `DELETE FROM login WHERE server_id = '${guild.id}'`
+                let sql = `DELETE FROM login WHERE server_id = ?`
                 try {
-                    con.query(sql);
+                    con.query(sql, [guild.id]);
                     return resolve(true);
                 } catch (error) {
                     return resolve(false);
@@ -212,11 +212,11 @@ module.exports = {
 
     deleteServer3: function (guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM roles WHERE server_id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM roles WHERE server_id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
-                let sql = `DELETE FROM roles WHERE server_id = '${guild.id}'`
+                let sql = `DELETE FROM roles WHERE server_id = ?`
                 try {
-                    con.query(sql);
+                    con.query(sql, [guild.id]);
                     return resolve(true);
                 } catch (error) {
                     return resolve(false);
@@ -227,11 +227,11 @@ module.exports = {
 
     deleteServer4: function (guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM channels WHERE server_id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM channels WHERE server_id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
-                let sql = `DELETE FROM channels WHERE server_id = '${guild.id}'`
+                let sql = `DELETE FROM channels WHERE server_id = ?`
                 try {
-                    con.query(sql);
+                    con.query(sql, [guild.id]);
                     return resolve(true);
                 } catch (error) {
                     return resolve(false);
@@ -242,11 +242,11 @@ module.exports = {
 
     deleteServer5: function (guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM coc WHERE server_id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM coc WHERE server_id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
-                let sql = `DELETE FROM coc WHERE server_id = '${guild.id}'`
+                let sql = `DELETE FROM coc WHERE server_id = ?`
                 try {
-                    con.query(sql);
+                    con.query(sql, [guild.id]);
                     return resolve(true);
                 } catch (error) {
                     return resolve(false);
@@ -257,11 +257,11 @@ module.exports = {
 
     deleteServer6: function (guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM ranks WHERE server_id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM ranks WHERE server_id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
-                let sql = `DELETE FROM ranks WHERE server_id = '${guild.id}'`
+                let sql = `DELETE FROM ranks WHERE server_id = ?`
                 try {
-                    con.query(sql);
+                    con.query(sql, [guild.id]);
                     return resolve(true);
                 } catch (error) {
                     return resolve(false);
@@ -272,11 +272,11 @@ module.exports = {
 
     deleteServer7: function (guild) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM reddits WHERE server_id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM reddits WHERE server_id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
-                let sql = `DELETE FROM reddits WHERE server_id = '${guild.id}'`
+                let sql = `DELETE FROM reddits WHERE server_id = ?`
                 try {
-                    con.query(sql);
+                    con.query(sql, [guild.id]);
                     return resolve(true);
                 } catch (error) {
                     return resolve(false);
@@ -289,18 +289,18 @@ module.exports = {
         const tblid = Array.from(guild.name)
         tblid.forEach(function (item, i) { if (item == " ") tblid[i] = "_"; });
         return new Promise(function (resolve, reject) {
-            con.query(`DROP TABLE IF EXISTS ${tblid.join("")}`);
+            con.query(`DROP TABLE IF EXISTS ?`, [tblid.join("")]);
             return resolve(true);
         })
     },
 
     setServer: function (guild, field, value) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM servers WHERE id = '${guild.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM servers WHERE id = ?`, [guild.id], (error, rows) => {
                 if (error) return resolve(error.code);
-                sql = `UPDATE servers SET ${field} = '${value}' WHERE id = '${guild.id}'`;
+                sql = `UPDATE servers SET ? = ? WHERE id = ?`;
                 try {
-                    con.query(sql);
+                    con.query(sql, [field, value, guild.id]);
                     return resolve(true);
                 } catch (error) {
                     return resolve(error);
@@ -312,12 +312,12 @@ module.exports = {
     addreddit: function (guild, reddit) {
         var sql;
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM reddits WHERE server_id = '${guild.id}' AND reddit = '${reddit}'`, (error, rows) => {
+            con.query(`SELECT * FROM reddits WHERE server_id = ? AND reddit = ?`, [guild.id, reddit], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length < 1) {
-                    sql = `INSERT INTO reddits (server_id, reddit) VALUES ('${guild.id}', '${reddit}')`
+                    sql = `INSERT INTO reddits (server_id, reddit) VALUES (?, ?)`
                     try {
-                        con.query(sql);
+                        con.query(sql, [guild.id, reddit]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -331,14 +331,14 @@ module.exports = {
 
     delreddit: function (guild, reddit) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM reddits WHERE server_id = '${guild.id}' AND reddit = '${reddit}'`, (error, rows) => {
+            con.query(`SELECT * FROM reddits WHERE server_id = ? AND reddit = ?`, [guild.id, reddit], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length < 1) {
                     return resolve(false);
                 } else {
-                    sql = `DELETE FROM reddits WHERE server_id = '${guild.id}' AND reddit = '${reddit}'`
+                    sql = `DELETE FROM reddits WHERE server_id = ? AND reddit = ?`
                     try {
-                        con.query(sql);
+                        con.query(sql, [guild.id, reddit]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -351,7 +351,7 @@ module.exports = {
     getreddits: function (id) {
         var reddits = []
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM reddits WHERE server_id = '${id}'`, (error, rows) => {
+            con.query(`SELECT * FROM reddits WHERE server_id = ?`, [id], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length < 1) {
                     resolve({
@@ -361,7 +361,7 @@ module.exports = {
                 } else {                    
                     a = 0;
                     while (a !== rows.length) {
-                        name = rows[a].reddit;
+                        const name = rows[a].reddit;
                         reddits.push(name);
                         a++;
                     }
@@ -378,12 +378,12 @@ module.exports = {
     addrank: function (guild, rank) {
         let sql;
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM ranks WHERE server_id = '${guild.id}' AND rank_id = '${rank.id}'`, (error, rows) => {
+            con.query(`SELECT * FROM ranks WHERE server_id = ? AND rank_id = ?`, [guild.id, rank.id], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length < 1) {
-                    sql = `INSERT INTO ranks (rank_id, server_id, rank_name) VALUES ('${rank.id}','${guild.id}', '${rank.name}')`
+                    sql = `INSERT INTO ranks (rank_id, server_id, rank_name) VALUES (?, ?, ?)`
                     try {                        
-                        con.query(sql);
+                        con.query(sql, [rank.id, guild.id, rank.name]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -400,14 +400,14 @@ module.exports = {
         var success;
         if (typeof rank.id != 'undefined') {
             return new Promise(function (resolve, reject) {
-                con.query(`SELECT * FROM ranks WHERE server_id = '${guild.id}' AND rank_id = '${rank.id}'`, (error, rows) => {
+                con.query(`SELECT * FROM ranks WHERE server_id = ? AND rank_id = ?`, [guild.id, rank.id], (error, rows) => {
                     if (error) return resolve(error.code);
                     if (rows.length < 1) {
                         return resolve(false);
                     } else {
-                        sql = `DELETE FROM ranks WHERE server_id = '${guild.id}' AND rank_id = '${rank.id}'`
+                        sql = `DELETE FROM ranks WHERE server_id = ? AND rank_id = ?`
                         try {
-                            con.query(sql);
+                            con.query(sql, [guild.id, rank.id]);
                             return resolve(true);
                         } catch (error) {
                             return resolve(error);
@@ -417,14 +417,14 @@ module.exports = {
             })
         } else {
             return new Promise(function (resolve, reject) {
-                con.query(`SELECT * FROM ranks WHERE server_id = '${guild.id}' AND rank_name = '${rank}'`, (error, rows) => {
+                con.query(`SELECT * FROM ranks WHERE server_id = ? AND rank_name = ?`, [guild.id, rank], (error, rows) => {
                     if (error) return resolve(error.code);
                     if (rows.length < 1) {
                         return resolve(false);
                     } else {
-                        sql = `DELETE FROM ranks WHERE server_id = '${guild.id}' AND rank_name = '${rank}'`
+                        sql = `DELETE FROM ranks WHERE server_id = ? AND rank_name = ?`
                         try {
-                            con.query(sql);
+                            con.query(sql, [guild.id, rank]);
                             return resolve(true);
                         } catch (error) {
                             return resolve(error);
@@ -438,10 +438,10 @@ module.exports = {
     getranks: function (id) {
         var ranks = []
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM ranks WHERE server_id = '${id}'`, (error, rows) => {
+            con.query(`SELECT * FROM ranks WHERE server_id = ?`, [id], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length < 1) {
-                    name = "No ranks on this server yet. Do you have suggestions for ranks? Contact the admin nearest to you."
+                    const name = "No ranks on this server yet. Do you have suggestions for ranks? Contact the admin nearest to you."
                     ranks.push(name)
                     resolve({
                         success: true,
@@ -450,7 +450,7 @@ module.exports = {
                 } else {
                     a = 0;
                     while (a !== rows.length) {
-                        name = rows[a].rank_name
+                        const name = rows[a].rank_name
                         ranks.push(name)
                         a++;
                     }
@@ -467,7 +467,7 @@ module.exports = {
     checkrank: function (id, rank_id) {
         var r;
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM ranks WHERE server_id = '${id}' AND rank_id = '${rank_id}'`, (error, rows) => {
+            con.query(`SELECT * FROM ranks WHERE server_id = ? AND rank_id = ?`, [id, rank_id], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length < 1) {
                     resolve({
@@ -485,10 +485,10 @@ module.exports = {
     },
 
     getinfractions: function (server, rMember) {
-        con.query(`CREATE TABLE IF NOT EXISTS ${server}(member_id VARCHAR(20) NOT NULL UNIQUE, member_name TEXT NOT NULL, infractions INT NOT NULL);`)
+        con.query(`CREATE TABLE IF NOT EXISTS ?(member_id VARCHAR(20) NOT NULL UNIQUE, member_name TEXT NOT NULL, infractions INT NOT NULL);`, [server]);
         var infractions;
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember}'`, (error, rows) => {
+            con.query(`SELECT * FROM ? WHERE member_id = ?`, [server, rMember], (error, rows) => {
                 if (error) resolve({
                     success: false,
                     err: error.code
@@ -514,13 +514,13 @@ module.exports = {
     deleteinfractions: function (server, rMember) {
         
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember}'`, (error, rows) => {
+            con.query(`SELECT * FROM ? WHERE member_id = ?`, [server, rMember], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length) {
-                    let sql = `DELETE FROM ${server} WHERE member_id = '${rMember}'`
+                    let sql = `DELETE FROM ? WHERE member_id = ?`
 
                     try {
-                        con.query(sql);
+                        con.query(sql, [server, rMember]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -534,13 +534,13 @@ module.exports = {
 
     createinfractions: function (server, rMember) {
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember.userID}'`, (error, rows) => {
+            con.query(`SELECT * FROM ? WHERE member_id = ?`, [server, rMember.userID], (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;
                 if (rows.length < 1) {
-                    sql = `INSERT INTO ${server} (member_id, member_name, infractions) VALUES ('${rMember.userID}', '${rMember.displayName}', 1)`
+                    sql = `INSERT INTO ? (member_id, member_name, infractions) VALUES (?, ?, 1)`
                     try {
-                        con.query(sql);
+                        con.query(sql, [server, rMember.userID, rMember.displayName]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -556,14 +556,14 @@ module.exports = {
     updateinfractions: function (server, rMember) {
 
         return new Promise(function (resolve, reject) {
-            con.query(`SELECT * FROM ${server} WHERE member_id = '${rMember.userID}'`, (error, rows) => {
+            con.query(`SELECT * FROM ? WHERE member_id = ?`, [server, rMember.userID], (error, rows) => {
                 if (error) return resolve(error.code);
                 let sql;
                 if (rows[0].member_id === rMember.userID) {
                     var infraction = rows[0].infractions + 1;
-                    sql = `UPDATE ${server} SET infractions = ${infraction} WHERE member_id = '${rMember.userID}'`
+                    sql = `UPDATE ? SET infractions = ? WHERE member_id = ?`
                     try {
-                        con.query(sql);
+                        con.query(sql, [server, infraction, rMember.userID]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -581,13 +581,13 @@ module.exports = {
             con.query(`SELECT * FROM servers`, (error, rows) => {
                 if (error) return resolve(error.code);
                 if (rows.length < 1) {
-                    name = "I'm not deployed on any servers :frowning2:"
+                    const name = "I'm not deployed on any servers :frowning2:"
                     ranks.push(name)
                     resolve(ranks)
                 } else {
                     a = 0;
                     while (a !== rows.length) {
-                        name = rows[a].id
+                        const name = rows[a].id
                         servers.push(name)
                         a++;
                     }
@@ -602,7 +602,7 @@ module.exports = {
         var chnl;
         return new Promise(function (resolve, reject) {
             
-            con.query(`SELECT * FROM servers WHERE id = '${srv}'`, (error, rows) => {
+            con.query(`SELECT * FROM servers WHERE id = ?`, [srv], (error, rows) => {
                 if (error) return resolve(error.code);
 
                 if (rows[0].reports === null) {
@@ -619,7 +619,7 @@ module.exports = {
         con.query("CREATE TABLE IF NOT EXISTS commands(name VARCHAR(512) NOT NULL, category VARCHAR(512) NOT NULL, description VARCHAR(1024) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;");
         return new Promise(function (resolve, reject) {
             var sql;
-            con.query(`SELECT * FROM commands WHERE name = '${command.name}' AND category = '${command.category}'`, (error, rows) => {
+            con.query(`SELECT * FROM commands WHERE name = ? AND category = ?`, [command.name, command.category], (error, rows) => {
                 if (error) return resolve(error.code);
                 if (command.descriptionlong) {
                     var description = command.descriptionlong;
@@ -634,13 +634,13 @@ module.exports = {
                     } else {
                         const oldname = rows[0].name;
                         console.log(oldname, command.name)
-                        sql = `UPDATE commands SET name = '${command.name}' WHERE name = "${oldname}"`
-                        con.query(sql);
-                        sql = `UPDATE commands SET category = '${command.category}' WHERE name = "${oldname}"`
-                        con.query(sql);
-                        sql = `UPDATE commands SET description = "${description}" WHERE name = "${oldname}"`
+                        sql = `UPDATE commands SET name = ? WHERE name = ?`
+                        con.query(sql [command.name, oldname]);
+                        sql = `UPDATE commands SET category = ? WHERE name = ?`
+                        con.query(sql, [command.category, oldname]);
+                        sql = `UPDATE commands SET description = ? WHERE name = ?`
                         try {
-                            con.query(sql);
+                            con.query(sql, [command.description, oldname]);
                             return resolve(false);
                         } catch (error) {
                             return resolve(error);
@@ -648,9 +648,9 @@ module.exports = {
                     }
                     
                 } else {
-                    sql = `INSERT INTO commands (name, category, description) VALUES ('${command.name}', '${command.category}', "${description}")`;
+                    sql = `INSERT INTO commands (name, category, description) VALUES (?, ?, ?)`;
                     try {
-                        con.query(sql);
+                        con.query(sql, [command.name, command.category, description]);
                         return resolve(true);
                     } catch (error) {
                         return resolve(error);
@@ -721,7 +721,7 @@ module.exports = {
 
     deleteTable: function (table) {
         return new Promise(function (resolve, reject) {
-            con.query(`DROP TABLE ${table}`, (error, rows) => {
+            con.query(`DROP TABLE ?`, [table], (error, rows) => {
                 if (error) return resolve(error.code);
                 return resolve(true);
             })
@@ -735,8 +735,8 @@ module.exports = {
                 if (results.length > 0) {
                     return resolve(false);
                 } else {
-                    sql = `INSERT INTO login (server_id, password) VALUES ('${username}', '${hashedPassword}')`
-                    con.query(sql);
+                    sql = `INSERT INTO login (server_id, password) VALUES (?, ?)`
+                    con.query(sql, [username, hashedPassword]);
                     return resolve(true);
                 }
             });
@@ -751,8 +751,8 @@ module.exports = {
                 if (rows.length > 0) {
                     return resolve(false);
                 } else {
-                    sql = `INSERT INTO coc (server_id, coc) VALUES ('${guildID}', "${coc}")`
-                    con.query(sql);
+                    sql = `INSERT INTO coc (server_id, coc) VALUES (?, ?)`
+                    con.query(sql, [guildID, coc]);
                     return resolve(true);
                 }
             })
@@ -789,8 +789,8 @@ module.exports = {
             con.query(`SELECT * FROM coc WHERE server_id = ? AND id = ?`, [guildID, id], function (error, rows) {
                 if (error) return resolve(error.code);
                 if (rows.length === 1) {
-                    sql = `DELETE FROM coc WHERE server_id = '${guildID}' AND id = '${id}'`
-                    con.query(sql);
+                    sql = `DELETE FROM coc WHERE server_id = ? AND id = ?`
+                    con.query(sql [guildID, id]);
                     return resolve(true);
                 } else {
                     return resolve(false);
@@ -804,8 +804,8 @@ module.exports = {
             con.query(`SELECT * FROM coc WHERE server_id = ? AND id = ?`, [guildID, id], function (error, rows) {
                 if (error) return resolve(error.code);
                 if (rows.length === 1) {
-                    sql = `UPDATE coc SET coc = '${coc}' WHERE server_id = '${guildID}' AND id = '${id}'`
-                    con.query(sql);
+                    sql = `UPDATE coc SET coc = ? WHERE server_id = ? AND id = ?`
+                    con.query(sql, [coc, guildID, id]);
                     return resolve(true);
                 } else {
                     return resolve(false);
