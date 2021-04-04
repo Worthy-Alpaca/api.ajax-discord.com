@@ -1,64 +1,64 @@
 const con = require('./index');
 
 module.exports = {
-    increase: function (channel_name, count) {
-        return new Promise(function (resolve, reject) {
-            con.query("SELECT * FROM diagnostics WHERE channel_name = ?", [channel_name], (err, rows) => {
-                if (err) return resolve(err);
+	increase: function (channel_name, count) {
+		return new Promise(function (resolve, reject) {
+			con.query('SELECT * FROM diagnostics WHERE channel_name = ?', [channel_name], (err, rows) => {
+				if (err) return resolve(err);
 
-                if (!rows.length) {
-                    sql = `INSERT INTO diagnostics (channel_name, character_count, messages_count) VALUES ('${channel_name}', ${count}, ${1})`
-                    con.query(sql);
-                    return resolve(true);
-                } else if (rows[0].channel_name === channel_name) {
-                    let setcount = rows[0].character_count + count;
-                    sql = `UPDATE diagnostics SET character_count = '${setcount}' WHERE channel_name = '${channel_name}'`
-                    con.query(sql);
-                    sql2 = `UPDATE diagnostics SET messages_count = '${rows[0].messages_count + 1}' WHERE channel_name = '${channel_name}'`
-                    con.query(sql2);
-                    return resolve(true);
-                } else {
-                    return resolve("Something went wrong");
-                }
+				if (!rows.length) {
+					sql = `INSERT INTO diagnostics (channel_name, character_count, messages_count) VALUES ('${channel_name}', ${count}, ${1})`;
+					con.query(sql);
+					return resolve(true);
+				} else if (rows[0].channel_name === channel_name) {
+					let setcount = rows[0].character_count + count;
+					sql = `UPDATE diagnostics SET character_count = '${setcount}' WHERE channel_name = '${channel_name}'`;
+					con.query(sql);
+					sql2 = `UPDATE diagnostics SET messages_count = '${rows[0].messages_count + 1}' WHERE channel_name = '${channel_name}'`;
+					con.query(sql2);
+					return resolve(true);
+				} else {
+					return resolve('Something went wrong');
+				}
 
                 
-            })
-        })
-    },
+			});
+		});
+	},
 
-    getstatistics: function (channel_name) {
-        return new Promise(function (resolve, reject) {
-            con.query("SELECT * FROM diagnostics WHERE channel_name = ?", [channel_name], (err, rows) => {
-                if (err) return resolve(err);
+	getstatistics: function (channel_name) {
+		return new Promise(function (resolve, reject) {
+			con.query('SELECT * FROM diagnostics WHERE channel_name = ?', [channel_name], (err, rows) => {
+				if (err) return resolve(err);
 
-                if (!rows.length) {
-                    return resolve({
-                        success: false,
-                        value: null
-                    });
-                } else {
-                    return resolve({
-                        success: true,
-                        value: rows
-                    });
-                }
-            })
-        })
-    },
+				if (!rows.length) {
+					return resolve({
+						success: false,
+						value: null
+					});
+				} else {
+					return resolve({
+						success: true,
+						value: rows
+					});
+				}
+			});
+		});
+	},
 
-    resetstatistic: function (channel_name) {
+	resetstatistic: function (channel_name) {
 
-        return new Promise(function (resolve, reject) {
-            con.query("SELECT * FROM diagnostics WHERE channel_name = ?", [channel_name], (error, rows) => {
-                if (error) return resolve(error.code);
-                if (rows.length === 1) {
-                    sql = `DELETE FROM diagnostics WHERE channel_name = '${channel_name}'`
-                    con.query(sql);
-                    return resolve(true);
-                } else {
-                    return resolve(false);
-                }
-            });
-        })
-    }
-}
+		return new Promise(function (resolve, reject) {
+			con.query('SELECT * FROM diagnostics WHERE channel_name = ?', [channel_name], (error, rows) => {
+				if (error) return resolve(error.code);
+				if (rows.length === 1) {
+					sql = `DELETE FROM diagnostics WHERE channel_name = '${channel_name}'`;
+					con.query(sql);
+					return resolve(true);
+				} else {
+					return resolve(false);
+				}
+			});
+		});
+	}
+};

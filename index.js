@@ -1,9 +1,8 @@
 const express = require('express');
 const app = express();
-const helmet = require("helmet");
+const helmet = require('helmet');
 var cookieParser = require('cookie-parser');
-var bodyParser = require("body-parser");
-const exjwt = require('express-jwt');
+var bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 
 //.env Import
@@ -36,33 +35,33 @@ app.use(cors());
 
 //express jsonwebtoken middleware
 const jwtMW = function (req, res, next) {
-    const token = req.header('auth-token');
-    if (!token) {
-        return res.status(400).json({
-            error: 'You need an access token!'
-        })
-    }
-    //console.log("verify");
-    try {
-        const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-        req.user = verified;
-        next();
-    } catch {
-        res.status(400).send('Invalid Token!!');
-    }
-}
+	const token = req.header('auth-token');
+	if (!token) {
+		return res.status(400).json({
+			error: 'You need an access token!'
+		});
+	}
+	//console.log("verify");
+	try {
+		const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+		req.user = verified;
+		next();
+	} catch {
+		res.status(400).send('Invalid Token!!');
+	}
+};
 
 //using express jsonwebtoke
 app.get('/', jwtMW, (req, res) => {
-    console.log(req.user)
-    const headers = req.headers;
-    res.status(200).json({        
-        Data: {
-            name,
-            version
-        },
-        headers
-    })
+	console.log(req.user);
+	const headers = req.headers;
+	res.status(200).json({        
+		Data: {
+			name,
+			version
+		},
+		headers
+	});
 });
 
 //Route Middlewares

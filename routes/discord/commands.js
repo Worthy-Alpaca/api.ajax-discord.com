@@ -6,59 +6,59 @@ const { checkcommand, deleteTable, getcommands } = require('../../database/queri
 
 router.post('/create', verify, async (req, res) => {
     
-    const success = await checkcommand(req.body.command)
+	const success = await checkcommand(req.body.command);
     
-    if (success === true) {
-        //console.log("command adding success")
-        res.status(200).json({
-            success: true,
-            err: null
-        });
-    } else if (success === false) {
-        res.status(200).json({
-            success: false,
-            err: null
-        });
-    } else {
-        console.log(success)
-        console.log("command adding error");
-        res.status(409).json({
-            status: 409,
-            success: false,
-            err: success
-        });
-    }
-    res.end();
+	if (success === true) {
+		//console.log("command adding success")
+		res.status(200).json({
+			success: true,
+			err: null
+		});
+	} else if (success === false) {
+		res.status(200).json({
+			success: false,
+			err: null
+		});
+	} else {
+		console.log(success);
+		console.log('command adding error');
+		res.status(409).json({
+			status: 409,
+			success: false,
+			err: success
+		});
+	}
+	res.end();
 });
 
 router.delete('/delete', verify, async (req, res) => {
 
-    if (req.headers.type === "delete/table") {
-        var success = await deleteTable(req.body.table);
-    }
+	if (req.headers.type === 'delete/table') {
+		var success = await deleteTable(req.body.table);
+	}
 
-    if (success === true) {
-        console.log("command delete success")
-        res.status(200).json({
-            success: true,
-            err: null
-        });
-    } else {
-        console.log("command delete error");
-        res.status(409).json({
-            success: false,
-            err: success
-        });
-    }
-    res.end();
+	if (success === true) {
+		console.log('command delete success');
+		res.status(200).json({
+			success: true,
+			err: null
+		});
+	} else {
+		console.log('command delete error');
+		res.status(409).json({
+			success: false,
+			err: success
+		});
+	}
+	res.end();
 });
 
 router.put('/update', verify, async (req, res) => {
-    res.status(404).json({
-        message: "No Data here yet"
-    })
+	res.status(404).json({
+		message: 'No Data here yet'
+	});
     
-    /* if (success === true) {
+	/* if (success === true) {
         console.log("command update success")
         res.status(200).json({
             success: true,
@@ -71,16 +71,16 @@ router.put('/update', verify, async (req, res) => {
             err: success
         });
     } */
-    res.end();
+	res.end();
 });
 
 router.get('/get', async (req, res) => {
-    const commands = await getcommands();
-    //console.log(commands)
+	const commands = await getcommands();
+	//console.log(commands)
     
-    res.json(commands);
+	res.json(commands);
 
-    res.end();
-})
+	res.end();
+});
 
 module.exports = router;
